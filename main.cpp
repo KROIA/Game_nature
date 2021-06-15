@@ -37,7 +37,7 @@ void setup_level()
     engine->set_setting_gameTickInterval(1.0f/120.0f);
     engine->set_setting_displayInterval(1.0f/60.0f);
 
-    //engine->display_stats(true);
+ //   engine->display_stats(true);
 }
 void clear_level()
 {
