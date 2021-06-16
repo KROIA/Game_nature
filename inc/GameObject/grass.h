@@ -8,7 +8,7 @@
 class Grass : public GameObject
 {
     public:
-        Grass();
+        Grass(const PointU &area);
         Grass(const Grass &other);
       /*  Grass(Controller *controller,
               Collider   *collider,
@@ -22,7 +22,7 @@ class Grass : public GameObject
         virtual void draw(PixelDisplay &display);
 
     protected:
-        virtual void setup();
+        virtual void setup(const PointU &area);
 
     private:
 
@@ -31,5 +31,6 @@ class Grass : public GameObject
         Collider *m_collider;
 
         Timer m_grassChangeTimer;
+        PointU m_area;
 };
 #endif

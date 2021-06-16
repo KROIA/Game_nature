@@ -6,14 +6,22 @@
 #include "QDebug"
 
 PixelEngine     *engine;
-Grass           *obj_grass;
 Player          *obj_player;
+
+Event *keyEvent_P;
+Event *keyEvent_O;
+
+// toggle Hitbox
+Event *keyEvent_H;
+GameObjectGroup hitboxObjectList;
+bool hitboxIsVisible;
 
 void setup_level();
 void clear_level();
 
-void user_tick_loop(double interval,unsigned long long tick);
-void user_draw_loop(double interval,unsigned long long tick);
+void user_tick_loop(double tickInterval,unsigned long long tick);
+void user_draw_loop(double tickInterval,unsigned long long tick);
+void userEventLoop(double tickInterval,unsigned long long tick);
 
 int main(int argc, char *argv[])
 {
@@ -48,36 +56,87 @@ void setup_level()
 
     engine->setUserTickLoop(user_tick_loop);
     engine->setUserDisplayLoop(user_draw_loop);
+    engine->setUserCheckEventLoop(userEventLoop);
 
  //   engine->display_stats(true);
 
     //GameObjects
-    obj_grass = new Grass();
-    engine->addGameObject(obj_grass);
+
+    GameObjectGroup *grassGroup = new GameObjectGroup();
+    PointU grassSize(2,2);
+    PointU grassArraySize(60,50);
+
+    for(unsigned int x=0; x<grassArraySize.getX(); x++)
+    {
+        for(unsigned int y=0; y<grassArraySize.getY(); y++)
+        {
+            Grass* grass = new Grass(grassSize);
+
+            grass->setPos(10+x*grassSize.getX(),10+y*grassSize.getY());
+            grassGroup->add(grass);
+        }
+    }
+    engine->addGroup(grassGroup);
+
 
     obj_player = new Player();
-    obj_player->setColor(Color(0,255,0));
+    obj_player->setColor(Color(0,100,100));
     obj_player->setStartPos(Point(50,50));
     obj_player->setKeyBinding(KEYBOARD_KEY_W, KEYBOARD_KEY_A,
                               KEYBOARD_KEY_S, KEYBOARD_KEY_D);
     obj_player->buildPlayer();
 
     engine->addGameObject(obj_player);
+    engine->setCollisionSingleInteraction(obj_player,grassGroup);
 
+    hitboxObjectList.add(grassGroup);
+    hitboxObjectList.add(obj_player);
 
+    //Key Events
+    keyEvent_P = new Event(KEYBOARD_KEY_P);
+    keyEvent_O = new Event(KEYBOARD_KEY_O);
+    keyEvent_H = new Event(KEYBOARD_KEY_H);
 
 }
 void clear_level()
 {
-
+    delete keyEvent_P;
+    delete keyEvent_O;
+    delete keyEvent_H;
     delete engine;
 }
 
-void user_tick_loop(double interval,unsigned long long tick)
+void user_tick_loop(double tickInterval,unsigned long long tick)
 {
 
 }
-void user_draw_loop(double interval,unsigned long long tick)
+void user_draw_loop(double tickInterval,unsigned long long tick)
 {
+
+}
+void userEventLoop(double tickInterval,unsigned long long tick)
+{
+    keyEvent_P->checkEvent();
+    keyEvent_O->checkEvent();
+    keyEvent_H->checkEvent();
+
+    if(keyEvent_P->isSinking())
+    {
+        //qDebug() << "keyEvent_P Sinking";
+        engine->display_stats(!engine->display_stats(),Color(255,200,0),Point(1300,100));
+    }
+    if(keyEvent_O->isPressed())
+    {
+        obj_player->rotate_90();
+    }
+
+    if(keyEvent_H->isSinking())
+    {
+        hitboxIsVisible = !hitboxIsVisible;
+        hitboxObjectList.setHitboxVisibility(hitboxIsVisible);
+    }
+
+
+
 
 }

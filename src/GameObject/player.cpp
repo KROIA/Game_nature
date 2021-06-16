@@ -30,7 +30,7 @@ Player::Player()
 
     m_sensor.setOwner(this);
     sensorCollider = new Collider();
-    sensorCollider->addHitbox(Rect(-10,-10,20,5));
+    sensorCollider->addHitbox(Rect(-5,-10,10,5));
     sensorCollider->updateBoundingBox();
     m_sensor.setSensorCollider(sensorCollider);
 
@@ -63,7 +63,7 @@ unsigned int Player::checkCollision(const vector<GameObject*> &other)
     unsigned int collisionAmount = GameObject::checkCollision(other);
     m_sensor.checkCollision(other);
 
-    if(m_sensorDebugTimer.start(1))
+    if(m_sensorDebugTimer.start(0.1))
     {
 
         if(m_sensor.getDetectedObjects().size()>0)
@@ -73,16 +73,13 @@ unsigned int Player::checkCollision(const vector<GameObject*> &other)
             for(size_t i=0; i<list.size(); i++)
             {
                 Property::Property p = list[i]->getProperty();
-                qDebug() << p.toString().c_str();
-                qDebug() << "";
-                p.setMood_inLove(p.getMood().inLove+0.001);
+                p.setFood_foodAmout(p.getFood().foodAmount - 30);
+                if(p.getFood().foodAmount < 0)
+                    p.setFood_foodAmout(0);
                 list[i]->setProperty(p);
             }
-
             qDebug() << list[0]->getProperty().toString().c_str();
-            Property::Property p = list[0]->getProperty();
-            p.setFood_foodAmout(p.getFood().foodAmount - 0.1);
-            list[0]->setProperty(p);
+
         }
     }
     return collisionAmount;
@@ -231,7 +228,7 @@ void Player::rotate_270(const PointF &rotationPoint)
 }
 void Player::event_hasCollision(GameObject *other)
 {
-    GameObject::event_hasCollision(other);
+    //GameObject::event_hasCollision(other);
     if(this->m_objEventHandler != nullptr)
         m_objEventHandler->collisionOccured(this,other);
     Property::Property otherProperty = other->getProperty();
