@@ -10,8 +10,20 @@ CONFIG -= app_bundle
 ENGINE_PATH = $$PWD/extern/PixelEngine
 include($$ENGINE_PATH/PixelEngine.pri)
 
+incPath = inc
+srcPath = src
+
+INCLUDEPATH += $$incPath
+INCLUDEPATH += $$incPath/GameObject
+
 SOURCES += \
-        main.cpp
+        $$srcPath/main.cpp  \
+        $$srcPath/GameObject/grass.cpp \
+        $$srcPath/GameObject/player.cpp
+
+HEADERS += \
+        $$incPath/GameObject/grass.h \
+        $$incPath/GameObject/player.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
