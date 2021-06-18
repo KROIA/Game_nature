@@ -1,11 +1,14 @@
 #include <QCoreApplication>
-#include "pixelengine.h"
+/*#include "pixelengine.h"
 #include "grass.h"
 #include "player.h"
+#include "grassblock.h"*/
 
 #include "QDebug"
 
-PixelEngine     *engine;
+#include "level.h"
+
+/*PixelEngine     *engine;
 Player          *obj_player;
 
 Event *keyEvent_P;
@@ -21,11 +24,11 @@ void clear_level();
 
 void user_tick_loop(double tickInterval,unsigned long long tick);
 void user_draw_loop(double tickInterval,unsigned long long tick);
-void userEventLoop(double tickInterval,unsigned long long tick);
+void userEventLoop(double tickInterval,unsigned long long tick);*/
 
 int main(int argc, char *argv[])
 {
-    setup_level();
+  /*  setup_level();
 
     while(engine->running())
     {
@@ -40,15 +43,30 @@ int main(int argc, char *argv[])
         }
     }
     clear_level();
+    return 1;*/
+
+    unsigned int mapWidth   = 16*32; // Width of the Grid, the hight will be calculated depending of the windowSize
+    double displayScale     = 1.8;
+    PointU windowSize(1900*displayScale,1000*displayScale);
+
+    Level game(windowSize,mapWidth);
+    game.setup();
+    while(game.engineIsActive())
+    {
+        game.run();
+    }
+    game.cleanup();
     return 1;
 }
-void setup_level()
+/*void setup_level()
 {
     unsigned int mapWidth = 300;
 
-    RECT dispaySize;
-    GetWindowRect(GetDesktopWindow(), &dispaySize);
-    PointU windowSize(dispaySize.right,dispaySize.bottom-20);
+    //RECT dispaySize;
+    //GetWindowRect(GetDesktopWindow(), &dispaySize);
+    //PointU windowSize(dispaySize.right,dispaySize.bottom-60);
+    double displayScale = 1.8;
+    PointU windowSize(1900*displayScale,1000*displayScale);
     engine = new PixelEngine (PointU(mapWidth,double(mapWidth)*double(windowSize.getY())/double(windowSize.getX())),windowSize);
     engine->set_setting_checkEventInterval(1.0f/30.0f);
     engine->set_setting_gameTickInterval(1.0f/120.0f);
@@ -76,7 +94,11 @@ void setup_level()
             grassGroup->add(grass);
         }
     }
-    engine->addGroup(grassGroup);
+    //engine->addGroup(grassGroup);
+
+    GrassBlock *grassBlock = new GrassBlock();
+    grassBlock->setPos(Point(50,10));
+    engine->addGameObject(grassBlock);
 
 
     obj_player = new Player();
@@ -91,6 +113,7 @@ void setup_level()
 
     hitboxObjectList.add(grassGroup);
     hitboxObjectList.add(obj_player);
+    hitboxObjectList.add(grassBlock);
 
     //Key Events
     keyEvent_P = new Event(KEYBOARD_KEY_P);
@@ -140,3 +163,4 @@ void userEventLoop(double tickInterval,unsigned long long tick)
 
 
 }
+*/

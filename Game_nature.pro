@@ -13,17 +13,32 @@ include($$ENGINE_PATH/PixelEngine.pri)
 incPath = inc
 srcPath = src
 
-INCLUDEPATH += $$incPath
-INCLUDEPATH += $$incPath/GameObject
+blocksInc = $$incPath/GameObject/Blocks
+blocksSrc = $$srcPath/GameObject/Blocks
+
+INCLUDEPATH += $$incPath \
+               $$incPath/GameObject \
+               $$blocksInc
 
 SOURCES += \
         $$srcPath/main.cpp  \
         $$srcPath/GameObject/grass.cpp \
-        $$srcPath/GameObject/player.cpp
+        $$srcPath/GameObject/player.cpp \
+        $$blocksSrc/block.cpp \
+        $$srcPath/level.cpp
 
 HEADERS += \
         $$incPath/GameObject/grass.h \
-        $$incPath/GameObject/player.h
+        $$incPath/GameObject/player.h \
+        $$blocksInc/block.h \
+        $$incPath/level.h \
+        $$incPath/GameObject/texturePaths.h \
+        $$blocksInc/grassblock.h \
+        $$blocksInc/dirtblock.h \
+        $$blocksInc/sandblock.h \
+        $$blocksInc/stoneblock.h \
+        $$blocksInc/waterblock.h
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
