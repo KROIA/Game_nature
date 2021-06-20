@@ -7,6 +7,7 @@ class StoneBlock : public Block
 {
     public:
         StoneBlock()
+            :   Block()
         {
             Property::Type type;
             Property::Body body;

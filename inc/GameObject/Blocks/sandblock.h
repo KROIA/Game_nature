@@ -7,6 +7,7 @@ class SandBlock : public Block
 {
     public:
         SandBlock()
+            :   Block()
         {
             Property::Type type;
             Property::Body body;

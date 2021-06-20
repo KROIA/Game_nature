@@ -2,8 +2,10 @@
 #define TEXTUREPATHS_H
 
 #include "string"
+#include "vector"
 
 using std::string;
+using std::vector;
 
 namespace TexturePath
 {
@@ -19,5 +21,25 @@ namespace TexturePath
         const string sand   = textureBaseBlockPath+"\\sand"+fileEnding;
         const string water  = textureBaseBlockPath+"\\water\\water_0"+fileEnding;
     };
+
+    namespace Animal {
+        const string textureBaseAnimalPath = textureBasePath + "\\animal";
+
+        const vector<string> sheep = {textureBaseAnimalPath + "\\Sheep\\sheep_0"+fileEnding,
+                                      textureBaseAnimalPath + "\\Sheep\\sheep_1"+fileEnding,
+                                      textureBaseAnimalPath + "\\Sheep\\sheep_2"+fileEnding,
+                                      textureBaseAnimalPath + "\\Sheep\\sheep_3"+fileEnding,
+                                      textureBaseAnimalPath + "\\Sheep\\sheep_4"+fileEnding,
+                                      textureBaseAnimalPath + "\\Sheep\\sheep_5"+fileEnding,
+                                      textureBaseAnimalPath + "\\Sheep\\sheep_6"+fileEnding,
+                                      textureBaseAnimalPath + "\\Sheep\\sheep_7"+fileEnding};
+
+    }
+
+    namespace Plant {
+        const string textureBasePlantsPath = textureBasePath + "\\plant";
+
+        const string grass = textureBasePlantsPath+"\\grass\\grass_1"+fileEnding;
+    }
 };
 #endif // TEXTUREPATHS_H

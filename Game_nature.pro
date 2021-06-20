@@ -16,19 +16,28 @@ srcPath = src
 blocksInc = $$incPath/GameObject/Blocks
 blocksSrc = $$srcPath/GameObject/Blocks
 
+animalsInc = $$incPath/GameObject/Animals
+animalsSrc = $$srcPath/GameObject/Animals
+
+plantsInc  = $$incPath/GameObject/Plants
+plantsSrc  = $$srcPath/GameObject/Plants
+
 INCLUDEPATH += $$incPath \
                $$incPath/GameObject \
-               $$blocksInc
+               $$blocksInc \
+               $$animalsInc \
+               $$plantsInc
 
 SOURCES += \
         $$srcPath/main.cpp  \
-        $$srcPath/GameObject/grass.cpp \
+        $$plantsSrc/grass.cpp \
         $$srcPath/GameObject/player.cpp \
         $$blocksSrc/block.cpp \
-        $$srcPath/level.cpp
+        $$srcPath/level.cpp \
+        $$animalsSrc/sheep.cpp
 
 HEADERS += \
-        $$incPath/GameObject/grass.h \
+        $$plantsInc/grass.h \
         $$incPath/GameObject/player.h \
         $$blocksInc/block.h \
         $$incPath/level.h \
@@ -37,7 +46,8 @@ HEADERS += \
         $$blocksInc/dirtblock.h \
         $$blocksInc/sandblock.h \
         $$blocksInc/stoneblock.h \
-        $$blocksInc/waterblock.h
+        $$blocksInc/waterblock.h \
+        $$animalsInc/sheep.h
 
 
 # Default rules for deployment.

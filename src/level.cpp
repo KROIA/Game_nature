@@ -8,16 +8,21 @@ unsigned int         Level::m_mapWidth;
 
 //========================================================
 // Put your GameObject declarations here:
-GameObjectGroup      Level::m_objectList;
+//ManagedGameObjectGroup      Level::m_objectList;
 
 // Toggle stats on and off
 Event               *Level::m_keyEvent_P;
 
 // Toggle Hitbox of all objects in the list: hitboxObjectList
 Event               *Level::m_keyEvent_H;
-GameObjectGroup      Level::m_hitboxObjectList;
+ManagedGameObjectGroup     *Level::m_terainGroup;
+ManagedGameObjectGroup     *Level::m_hitboxObjectList;
 bool                 Level::m_hitboxIsVisible;
 Timer                Level::m_timer1;
+Sheep               *Level::m_sheep;
+
+ManagedGameObjectGroup     *Level::m_grassList;
+unsigned int         Level::m_maxGrassAmount;
 
 Level::Level(PointU windowSize, unsigned int mapWidth)
 {
@@ -59,12 +64,36 @@ void Level::setup_engine()
 // Build all GameObjects and configures them
 void Level::setup_level()
 {
+    m_sheep = new Sheep();
+    m_sheep->setPos(0,0);
+
+
+    // Generate Grass
+    m_maxGrassAmount    = 10;
+    m_grassList         = new ManagedGameObjectGroup();
+    regenerateGrassField();
+
     // Generate random Blocks on Position ( 10 | 10 ) with the size of ( 5 x 4 ) blocks
-    GameObjectGroup *terainGroup = factory_terain(RectU(PointU(10,10),PointU(19,11)));
+    m_terainGroup = factory_terain(RectU(PointU(10,10),PointU(19,11)));
 
-    m_engine->addGroup(terainGroup);
 
-    m_hitboxObjectList.add(terainGroup);
+
+    m_hitboxObjectList = new ManagedGameObjectGroup();
+    m_hitboxObjectList->add(m_terainGroup);
+    m_hitboxObjectList->add(m_sheep);
+    m_hitboxObjectList->add(m_grassList);
+
+
+    m_engine->addGameObject(m_sheep);
+    m_engine->addGroup(m_grassList);
+    m_engine->addGroup(m_terainGroup);
+    m_engine->addGroup(m_hitboxObjectList);
+
+    m_engine->setCollisionSingleInteraction(m_sheep,m_grassList);
+
+    m_engine->setRenderLayer_BOTTOM(m_terainGroup);
+
+
 }
 // Setup the keybindings for special keyEvents
 void Level::setup_keyEvent()
@@ -102,14 +131,20 @@ void Level::userEventLoop(double tickInterval,unsigned long long tick)
     {
         // Toggle stats visualisation
         m_engine->display_stats(!m_engine->display_stats(),Color(255,200,0),Point(m_windowSize.getX()-800,20));
+
+        DirtBlock *block = new DirtBlock();
+        block->setPos(PixelEngine::random(0,100),PixelEngine::random(0,100));
+        m_terainGroup->add(block);
     }
 
     if(m_keyEvent_H->isSinking())
     {
         // Toggle hitbox visualisation
         m_hitboxIsVisible = !m_hitboxIsVisible;
-        m_hitboxObjectList.setHitboxVisibility(m_hitboxIsVisible);
+        m_hitboxObjectList->setHitboxVisibility(m_hitboxIsVisible);
     }
+
+    regenerateGrassField();
 }
 
  // userTickLoop: Here you can manipulate the game.
@@ -130,7 +165,7 @@ void Level::userDrawLoop(double tickInterval,unsigned long long tick)
 }
 
 
-GameObjectGroup *Level::factory_terain(RectU area)
+ManagedGameObjectGroup *Level::factory_terain(RectU area)
 {
     vector<vector<int>  >map
     {
@@ -159,7 +194,7 @@ GameObjectGroup *Level::factory_terain(RectU area)
                            PixelEngine::random(0,map[0].size() - area.getSize().getX()));
     }
 
-    GameObjectGroup *group = new GameObjectGroup();
+    ManagedGameObjectGroup *group = new ManagedGameObjectGroup();
     for(unsigned int x=0; x<area.getSize().getX(); x++)
     {
         for(unsigned int y=0; y<area.getSize().getY(); y++)
@@ -179,5 +214,17 @@ GameObjectGroup *Level::factory_terain(RectU area)
     }
     return group;
 }
+void Level::regenerateGrassField()
+{
+    while(m_grassList->size() < m_maxGrassAmount)
+    {
+        Grass *grass = new Grass();
+        grass->setPos(PixelEngine::random(0,200),PixelEngine::random(0,200));
 
+
+        m_grassList->add(grass);
+        //m_engine->
+        //m_engine->setCollisionSingleInteraction(m_sheep,grass);
+    }
+}
 

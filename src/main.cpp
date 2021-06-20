@@ -45,6 +45,24 @@ int main(int argc, char *argv[])
     clear_level();
     return 1;*/
 
+ /*   int *int1 = new int(10);
+    qDebug() <<*int1;
+    qDebug() <<"int1" <<int1;
+
+    int *int2 = int1;
+
+    qDebug() <<"int1" <<int1;
+    qDebug() <<"int2" <<int2;
+
+    delete int2;
+    qDebug() <<"int1" <<int1;
+    qDebug() <<"int2" <<int2;
+    int2 = nullptr;
+    qDebug() <<"int1" <<int1;
+    qDebug() <<"int2" <<int2;
+    qDebug() <<*int1;
+
+    getchar();*/
     unsigned int mapWidth   = 16*32; // Width of the Grid, the hight will be calculated depending of the windowSize
     double displayScale     = 1.8;
     PointU windowSize(1900*displayScale,1000*displayScale);

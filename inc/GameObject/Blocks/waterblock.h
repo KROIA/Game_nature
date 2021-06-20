@@ -7,6 +7,7 @@ class WaterBlock : public Block
 {
     public:
         WaterBlock()
+            :   Block()
         {
             Property::Type type;
             Property::Body body;

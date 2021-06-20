@@ -7,6 +7,7 @@ class DirtBlock : public Block
 {
     public:
         DirtBlock()
+            :   Block()
         {
             Property::Type type;
             Property::Body body;

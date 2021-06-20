@@ -11,6 +11,10 @@
 #include "Blocks/stoneblock.h"
 #include "Blocks/waterblock.h"
 
+#include "Animals/sheep.h"
+
+#include "Plants/grass.h"
+
 
 // Create a class, called "Level".
 // You can run the Engine also in the main loop
@@ -53,7 +57,8 @@ class Level
 
 //========================================================
         // Put your private function declarations here:
-        static GameObjectGroup *factory_terain(RectU area);
+        static ManagedGameObjectGroup *factory_terain(RectU area);
+        static void regenerateGrassField();
 
         // Engine object
         static PixelEngine         *m_engine;
@@ -63,16 +68,21 @@ class Level
 
 //========================================================
         // Put your GameObject declarations here:
-        static GameObjectGroup      m_objectList;
+        //static ManagedGameObjectGroup      m_objectList;
 
         // Toggle stats on and off
         static Event               *m_keyEvent_P;
 
         // Toggle Hitbox of all objects in the list: hitboxObjectList
         static Event               *m_keyEvent_H;
-        static GameObjectGroup      m_hitboxObjectList;
+        static ManagedGameObjectGroup     *m_terainGroup;
+        static ManagedGameObjectGroup     *m_hitboxObjectList;
         static bool                 m_hitboxIsVisible;
         static Timer                m_timer1;
+        static Sheep               *m_sheep;
+
+        static ManagedGameObjectGroup     *m_grassList;
+        static unsigned int         m_maxGrassAmount;
 
 };
 #endif // LEVEL_H

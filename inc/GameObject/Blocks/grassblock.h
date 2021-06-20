@@ -7,6 +7,7 @@ class GrassBlock : public Block
 {
     public:
         GrassBlock()
+            :   Block()
         {
             Property::Type type;
             Property::Body body;
@@ -31,6 +32,15 @@ class GrassBlock : public Block
             property.setFood(food);
 
             Block::setProperty(property);
+        }
+
+        virtual void checkEvent()
+        {
+            Block::checkEvent();
+            if(m_property.getFood().foodAmount == 0)
+            {
+                GameObject::deleteMeFromEngine();
+            }
         }
 };
 #endif // GRASSBLOCK_H
