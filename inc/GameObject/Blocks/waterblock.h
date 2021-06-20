@@ -32,6 +32,7 @@ class WaterBlock : public Block
             property.setFood(food);
 
             Block::setProperty(property);
+            Block::setup_collider();
         }
 };
 #endif // WATERBLOCK_H

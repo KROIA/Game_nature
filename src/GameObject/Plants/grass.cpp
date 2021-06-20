@@ -1,17 +1,13 @@
-#include "grass.h"
+/*#include "grass.h"
 
-Grass::Grass()
+Grass::Grass(unsigned int variation)
     :   GameObject()
 {
-    GameObject::setTexturePath(TexturePath::Plant::grass);
-    GameObject::loadTexture();
-    GameObject::setTextureOnPainter();
-    GameObject::setHitboxFromTexture();
 
-    m_property.setBody_material(Property::Material::Grass);
 }
 
 Grass::~Grass()
 {
 
 }
+*/

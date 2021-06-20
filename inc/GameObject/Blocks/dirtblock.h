@@ -32,6 +32,7 @@ class DirtBlock : public Block
             property.setFood(food);
 
             Block::setProperty(property);
+            Block::setup_collider();
         }
 };
 #endif // DIRTBLOCK_H

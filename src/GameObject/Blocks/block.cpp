@@ -4,7 +4,7 @@ Block::Block(const PointU &size)
     :   GameObject()
 {
     m_size = size;
-    this->setup_collider();
+    //this->setup_collider();
 }
 Block::Block(const PointU &size,
              const string &texturePath,
@@ -97,7 +97,8 @@ void Block::setTexturePath(const string &path)
     GameObject::setTexturePath(path);
     GameObject::loadTexture();
     GameObject::setTextureOnPainter();
-    //GameObject::setHitboxFromTexture();
+
+
 }
 
 void Block::setProperty(const Property::Property &property)
@@ -116,6 +117,8 @@ const Property::Property &Block::getProperty() const
 }*/
 void Block::setup_collider()
 {
-    GameObject::addHitbox(Rect(m_size.getX(),m_size.getY()));
+  //  GameObject::addHitbox(Rect(m_size.getX(),m_size.getY()));
+    Rect boundingBox = Rect::getFrame(m_texture->getRects());
+    GameObject::addHitbox(boundingBox);
 }
 

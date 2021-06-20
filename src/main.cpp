@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     qDebug() <<*int1;
 
     getchar();*/
-    unsigned int mapWidth   = 16*32; // Width of the Grid, the hight will be calculated depending of the windowSize
+    unsigned int mapWidth   = 16*40; // Width of the Grid, the hight will be calculated depending of the windowSize
     double displayScale     = 1.8;
     PointU windowSize(1900*displayScale,1000*displayScale);
 

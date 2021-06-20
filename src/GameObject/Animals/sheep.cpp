@@ -10,18 +10,30 @@ Sheep::Sheep()
     m_eventLEFT         = new Event();
     m_eventRIGHT        = new Event();
     m_event_EAT         = new Event();
+    m_eventToggleStats  = new Event();
+
+    m_propertyText         = new DisplayText();
 
     GameObject::setTexture(m_animatedTexture);
     GameObject::addController(m_controller);
 
+    m_propertyText->setVisibility(false);
+    m_propertyText->setString("");
+    m_propertyText->setCharacterSize(40); // in pixels, not points!
+    m_propertyText->setColor(Color(255,255,255,255)); // Transparent white
+    m_propertyTextRelativePos.set(16,-90);
+    m_propertyText->setPos(m_propertyTextRelativePos);
+
+    GameObject::addText(m_propertyText);
+
     setTexturePathList(TexturePath::Animal::sheep);
     setKeyBinding(KEYBOARD_KEY_W, KEYBOARD_KEY_A,
                   KEYBOARD_KEY_S, KEYBOARD_KEY_D,
-                  KEYBOARD_KEY_E);
+                  KEYBOARD_KEY_E, KEYBOARD_KEY_Q);
 
     m_sensor->setOwner(this);
     Collider *sensorCollider = new Collider();
-    sensorCollider->addHitbox(Rect(-4,-6,8,6));
+    sensorCollider->addHitbox(Rect(-4,-19,8,6));
     sensorCollider->updateBoundingBox();
     m_sensor->setSensorCollider(sensorCollider);
     setupProperty();
@@ -36,8 +48,9 @@ Sheep::Sheep(const Sheep &other)
     m_eventLEFT         = new Event();
     m_eventRIGHT        = new Event();
     m_event_EAT         = new Event();
+    m_eventToggleStats  = new Event();
 
-
+    m_propertyText         = new DisplayText();
 
     *this->m_animatedTexture    = *other.m_animatedTexture;
     *this->m_sensor             = *other.m_sensor;
@@ -45,21 +58,24 @@ Sheep::Sheep(const Sheep &other)
     *this->m_eventLEFT          = *other.m_eventLEFT;
     *this->m_eventRIGHT         = *other.m_eventRIGHT;
     *this->m_event_EAT          = *other.m_event_EAT;
-    this->m_keyUP               = other.m_keyUP;
-    this->m_keyLEFT             = other.m_keyLEFT;
-    this->m_keyDOWN             = other.m_keyDOWN;
-    this->m_keyRIGHT            = other.m_keyRIGHT;
+    *this->m_eventToggleStats   = *other.m_eventToggleStats;
+    *this->m_propertyText          = *other.m_propertyText;
 
     GameObject::setTexture(m_animatedTexture);
     GameObject::clearController();
     GameObject::addController(m_controller);
+    GameObject::addText(m_propertyText);
 }
 Sheep::~Sheep()
 {
+    GameObject::removeText(m_propertyText);
+
+    delete m_propertyText;
     delete m_sensor;
     delete m_eventLEFT;
     delete m_eventRIGHT;
     delete m_event_EAT;
+    delete m_eventToggleStats;
 }
 
 void Sheep::checkEvent()
@@ -68,6 +84,26 @@ void Sheep::checkEvent()
     m_eventLEFT->checkEvent();
     m_eventRIGHT->checkEvent();
     m_event_EAT->checkEvent();
+    m_eventToggleStats->checkEvent();
+
+    if(m_controller->getMovingVector().getLength() > 0)
+    {
+        //qDebug() << "Moving";
+        if(m_property.getBody().stamina > 0)
+            m_property.setBody_stamina(m_property.getBody().stamina - 1);
+
+        if(m_property.getBody().stamina < 10)
+        {
+            m_property.setBody_health(m_property.getBody().health - 2);
+
+        }
+        if(m_property.getBody().health <= 0)
+        {
+            GameObject::removeText(m_propertyText);
+            GameObject::removeMeFromEngine();
+            return;
+        }
+    }
 
     if(m_eventLEFT->isSinking())
     {
@@ -84,6 +120,7 @@ void Sheep::checkEvent()
 
     if(m_event_EAT->isSinking())
     {
+
         vector<GameObject*>detectedObjList  = m_sensor->getDetectedObjects();
         if(detectedObjList.size()>0)
         {
@@ -113,16 +150,26 @@ void Sheep::checkEvent()
                     this->setProperty(sheepProperty);
                     detectedObjList[i]->setProperty(p);
 
-                    qDebug() << sheepProperty.toString().c_str();
-                    qDebug() << p.toString().c_str();
+                    if(p.getFood().foodAmount < 0.01)
+                        detectedObjList[i]->deleteMeFromEngine();
+
+                    //qDebug() << sheepProperty.toString().c_str();
+                    //qDebug() << p.toString().c_str();
                 }
-                else if(p.getBody().material == Property::Material::Grass)
+               /* else if(p.getBody().material == Property::Material::Grass)
                 {
                     detectedObjList[i]->deleteMeFromEngine();
-                }
+                    m_propertyText->setString("Grass Essen");
+                }*/
+
             }
 
         }
+    }
+
+    if(m_eventToggleStats->isSinking())
+    {
+        m_propertyText->setVisibility(!m_propertyText->isVisible());
     }
 }
 
@@ -134,33 +181,19 @@ unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
 {
     unsigned int collisionAmount = GameObject::checkCollision(other);
     m_sensor->checkCollision(other);
-
-    /*if(m_sensorDebugTimer.start(0.1))
-    {
-
-        if(m_sensor.getDetectedObjects().size()>0)
-        {
-            vector<GameObject*>list  = m_sensor.getDetectedObjects();
-            qDebug()<<"sensor detects "<<m_sensor.getDetectedObjects().size()<<" objects";
-            for(size_t i=0; i<list.size(); i++)
-            {
-                Property::Property p = list[i]->getProperty();
-                p.setFood_foodAmout(p.getFood().foodAmount - 30);
-                if(p.getFood().foodAmount < 0)
-                    p.setFood_foodAmout(0);
-                list[i]->setProperty(p);
-            }
-            qDebug() << list[0]->getProperty().toString().c_str();
-
-        }
-    }*/
     return collisionAmount;
 }
 void Sheep::draw(PixelDisplay &display)
 {
+    if(m_slowTimer.start(0.5))
+    {
+        updatePropertyText();
+        //m_property.setMood_stresslevel(100-m_property.getBody().health);
+    }
     GameObject::draw(display);
     m_sensor->draw(display);
-
+    if(m_propertyText->isVisible())
+        m_propertyText->setPos(Vector(m_layerItem.getPos()) + m_propertyTextRelativePos);
    // if(m_debugTimer.start)
 }
 
@@ -181,27 +214,29 @@ void Sheep::setKeyBinding(const int &UP_KEY,
                           const int &LEFT_KEY,
                           const int &DOWN_KEY,
                           const int &RIGHT_KEY,
-                          const int &EAT_KEY)
+                          const int &EAT_KEY,
+                          const int &DISPLAY_PROPERTY_KEY)
 {
-    m_keyUP     = UP_KEY;
-    m_keyLEFT   = LEFT_KEY;
-    m_keyDOWN   = DOWN_KEY;
-    m_keyRIGHT  = RIGHT_KEY;
-
-
-    m_controller->setKey_forMove_UP(m_keyUP);
+    m_controller->setKey_forMove_UP(UP_KEY);
    // m_controller->setKey_forMove_LEFT(m_keyLEFT);
    // m_controller->setKey_forMove_RIGHT(m_keyRIGHT);
-    m_controller->setKey_forMove_DOWN(m_keyDOWN);
+    m_controller->setKey_forMove_DOWN(DOWN_KEY);
 
-    m_eventLEFT->setKey(m_keyLEFT);
-    m_eventRIGHT->setKey(m_keyRIGHT);
+    m_eventLEFT->setKey(LEFT_KEY);
+    m_eventRIGHT->setKey(RIGHT_KEY);
     m_event_EAT->setKey(EAT_KEY);
+    m_eventToggleStats->setKey(DISPLAY_PROPERTY_KEY);
 }
 void Sheep::event_hasCollision(vector<GameObject *> other)
 {
     // Ignore collision with objects
-    //GameObject::event_hasCollision(other);
+    for(GameObject* &otherObj : other)
+    {
+        // The sheep can't swim
+        if(otherObj->getProperty().getBody().material == Property::Material::Water)
+            GameObject::event_hasCollision(other);
+    }
+
 }
 void Sheep::setupProperty()
 {
@@ -234,4 +269,25 @@ void Sheep::setupProperty()
     p.setFood(food);
     p.setMood(mood);
     this->setProperty(p);
+}
+void Sheep::updatePropertyText()
+{
+    /*string text =
+           "body.fat:              "
+           "body.nutritionalValue: "
+           "body.stamina:          "
+           "body.health:           "
+           "body.strength:         "
+           "body.weight:           "
+           "body.density:          "
+
+           "food.isEatable:        "
+           "food.foodAmount:       "
+           "food.healthyLevel:     "
+
+*/
+    string str = m_property.toString();
+    m_propertyText->setText(str);
+
+
 }

@@ -22,7 +22,7 @@ class GrassBlock : public Block
             body.weight             = body.density * body.density;
             body.nutritionalValue   = 1.5;
 
-            food.isEatable          = true;
+            food.isEatable          = false;
             food.healthyLevel       = 1.0;
             food.foodAmount         = 5;
 
@@ -32,6 +32,7 @@ class GrassBlock : public Block
             property.setFood(food);
 
             Block::setProperty(property);
+            Block::setup_collider();
         }
 
         virtual void checkEvent()

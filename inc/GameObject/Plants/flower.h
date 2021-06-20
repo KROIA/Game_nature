@@ -1,22 +1,21 @@
-#ifndef GRASS_H
-#define GRASS_H
+#ifndef FLOWER_H
+#define FLOWER_H
 #include "gameobject.h"
 #include "texturePaths.h"
 
-class Grass     : public GameObject
+class Flower     : public GameObject
 {
     public:
-        Grass(unsigned int variation = 0)
+        Flower(unsigned int variation = 0)
         {
-            if(variation >= TexturePath::Plant::grass.size())
+            if(variation >= TexturePath::Plant::flower.size())
                 variation = 0;
 
-            GameObject::setTexturePath(TexturePath::Plant::grass[variation]);
+            GameObject::setTexturePath(TexturePath::Plant::flower[variation]);
             GameObject::loadTexture();
             GameObject::setTextureOnPainter();
             Rect boundingBox = Rect::getFrame(m_texture->getRects());
             GameObject::addHitbox(boundingBox);
-
 
             Property::Type type;
             Property::Body body;
@@ -27,13 +26,13 @@ class Grass     : public GameObject
             type.description        = Property::Description::staticObstacle;
 
             body.material           = Property::Material::Grass;
-            body.density            = 0.8;
+            body.density            = 0.4;
             body.weight             = body.density * body.density;
-            body.nutritionalValue   = 1.5;
+            body.nutritionalValue   = 2.5;
 
             food.isEatable          = true;
-            food.healthyLevel       = 2;
-            food.foodAmount         = 5;
+            food.healthyLevel       = 3;
+            food.foodAmount         = 2;
 
             Property::Property property;
             property.setType(type);
@@ -42,14 +41,13 @@ class Grass     : public GameObject
 
             GameObject::setProperty(property);
 
-
         }
 
-        ~Grass(){};
+        ~Flower(){};
 
     protected:
 
     private:
 
 };
-#endif
+#endif // FLOWER_H

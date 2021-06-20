@@ -47,7 +47,8 @@ HEADERS += \
         $$blocksInc/sandblock.h \
         $$blocksInc/stoneblock.h \
         $$blocksInc/waterblock.h \
-        $$animalsInc/sheep.h
+        $$animalsInc/sheep.h \
+        inc/GameObject/Plants/flower.h
 
 
 # Default rules for deployment.

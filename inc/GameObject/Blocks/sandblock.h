@@ -32,6 +32,7 @@ class SandBlock : public Block
             property.setFood(food);
 
             Block::setProperty(property);
+            Block::setup_collider();
         }
 };
 #endif // SANDBLOCK_H

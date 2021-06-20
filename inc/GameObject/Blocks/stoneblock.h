@@ -32,6 +32,7 @@ class StoneBlock : public Block
             property.setFood(food);
 
             Block::setProperty(property);
+            Block::setup_collider();
         }
 };
 #endif // STONEBLOCK_H
