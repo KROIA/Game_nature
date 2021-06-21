@@ -1,3 +1,6 @@
+
+
+
 #include <QCoreApplication>
 /*#include "pixelengine.h"
 #include "grass.h"
@@ -63,17 +66,27 @@ int main(int argc, char *argv[])
     qDebug() <<*int1;
 
     getchar();*/
+    EASY_PROFILER_ENABLE;
+    EASY_MAIN_THREAD;
+    EASY_BLOCK("Setup");
     unsigned int mapWidth   = 16*40; // Width of the Grid, the hight will be calculated depending of the windowSize
-    double displayScale     = 1.8;
+    double displayScale     = 0.9;
     PointU windowSize(1900*displayScale,1000*displayScale);
 
     Level game(windowSize,mapWidth);
     game.setup();
+    EASY_END_BLOCK;
+    EASY_BLOCK("while");
     while(game.engineIsActive())
     {
         game.run();
     }
+    EASY_END_BLOCK;
+    EASY_BLOCK("cleanup");
     game.cleanup();
+    EASY_END_BLOCK;
+    auto blocks_count = profiler::dumpBlocksToFile("profiler.prof");
+    std::cout << "Profiler blocks count: " << blocks_count << std::endl;
     return 1;
 }
 /*void setup_level()

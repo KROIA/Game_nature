@@ -112,6 +112,7 @@ void Level::cleanup()
 // Mainloop for the engine
 void Level::run()
 {
+    EASY_FUNCTION(profiler::colors::Green);
     m_engine->checkEvent();
     m_engine->tick();
     m_engine->display();

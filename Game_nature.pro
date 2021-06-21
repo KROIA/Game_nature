@@ -10,6 +10,9 @@ CONFIG -= app_bundle
 ENGINE_PATH = $$PWD/extern/PixelEngine
 include($$ENGINE_PATH/PixelEngine.pri)
 
+POFILERPATH = "C:/Users/KRIA/Documents/QT/Projects/easy_profiler-2.1.0"
+include($$POFILERPATH/Profiler.pri)
+
 incPath = inc
 srcPath = src
 

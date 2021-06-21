@@ -19,7 +19,7 @@ Sheep::Sheep()
 
     m_propertyText->setVisibility(false);
     m_propertyText->setString("");
-    m_propertyText->setCharacterSize(40); // in pixels, not points!
+    m_propertyText->setCharacterSize(20); // in pixels, not points!
     m_propertyText->setColor(Color(255,255,255,255)); // Transparent white
     m_propertyTextRelativePos.set(16,-90);
     m_propertyText->setPos(m_propertyTextRelativePos);
