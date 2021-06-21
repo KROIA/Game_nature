@@ -7,11 +7,12 @@ CONFIG -= app_bundle
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+
+#CONFIG+=BUILD_WITH_EASY_PROFILER
+
 ENGINE_PATH = $$PWD/extern/PixelEngine
 include($$ENGINE_PATH/PixelEngine.pri)
 
-POFILERPATH = "C:/Users/KRIA/Documents/QT/Projects/easy_profiler-2.1.0"
-include($$POFILERPATH/Profiler.pri)
 
 incPath = inc
 srcPath = src

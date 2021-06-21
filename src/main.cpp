@@ -1,4 +1,4 @@
-
+//#define USE_EASY_PROFILER
 
 
 #include <QCoreApplication>
@@ -49,6 +49,8 @@ int main(int argc, char *argv[])
     return 1;*/
 
  /*   int *int1 = new int(10);
+  *
+  *
     qDebug() <<*int1;
     qDebug() <<"int1" <<int1;
 
@@ -66,9 +68,11 @@ int main(int argc, char *argv[])
     qDebug() <<*int1;
 
     getchar();*/
+
+
     EASY_PROFILER_ENABLE;
     EASY_MAIN_THREAD;
-    EASY_BLOCK("Setup");
+    EASY_BLOCK("Setup",profiler::colors::Amber);
     unsigned int mapWidth   = 16*40; // Width of the Grid, the hight will be calculated depending of the windowSize
     double displayScale     = 0.9;
     PointU windowSize(1900*displayScale,1000*displayScale);
@@ -76,7 +80,7 @@ int main(int argc, char *argv[])
     Level game(windowSize,mapWidth);
     game.setup();
     EASY_END_BLOCK;
-    EASY_BLOCK("while");
+    EASY_BLOCK("while",profiler::colors::Amber100);
     while(game.engineIsActive())
     {
         game.run();
