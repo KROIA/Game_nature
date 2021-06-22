@@ -141,7 +141,7 @@ void Level::userEventLoop(double tickInterval,unsigned long long tick)
     {
         // Toggle hitbox visualisation
         m_hitboxIsVisible = !m_hitboxIsVisible;
-        m_hitboxObjectList->setHitboxVisibility(m_hitboxIsVisible);
+        //m_hitboxObjectList->setHitboxVisibility(m_hitboxIsVisible);
     }
 
     regenerateGrassField();
@@ -174,7 +174,7 @@ void Level::userDrawLoop(double tickInterval,unsigned long long tick)
 ManagedGameObjectGroup *Level::factory_terain(RectU area)
 {
     Texture texture;
-    texture.setOriginType(Texture::Origin::topLeft);
+    //texture.setOriginType(Texture::Origin::topLeft);
     texture.loadTexture(TexturePath::tearainMap);
 
    /* vector<vector<int>  >map

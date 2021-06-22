@@ -35,6 +35,7 @@ class Sheep     : public GameObject
         virtual void updatePropertyText();
 
         AnimatedTexture *m_animatedTexture;
+        //Texture         *m_texture;
         Sensor          *m_sensor;
         KeyController   *m_controller;
 

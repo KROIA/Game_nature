@@ -92,7 +92,7 @@ void Player::draw(PixelDisplay &display)
 void Player::setColor(const Color &color)
 {
     m_playerColor = color;
-    m_painter->setPixelColor(m_playerColor);
+    //m_painter->setPixelColor(m_playerColor);
 }
 void Player::setStartPos(const Point &point)
 {
@@ -137,7 +137,7 @@ void Player::buildPlayer()
     m_controller->setKey_forMove_DOWN(m_keyDOWN);
     GameObject::setPos(m_initalPos);
 
-    m_painter->clear();
+    //m_painter->clear();
     m_collider->clear();
 
     this->setupPLayerBody(m_painter,m_collider);
@@ -159,7 +159,7 @@ void Player::setupPLayerBody(Painter *p,Collider *c)
      */
 
     // Head
-    p->addPixel(Pixel(Point(-1,-2),m_playerColor));
+    /*p->addPixel(Pixel(Point(-1,-2),m_playerColor));
     p->addPixel(Pixel(Point( 0,-2),m_playerColor));
     p->addPixel(Pixel(Point( 1,-2),m_playerColor));
     p->addPixel(Pixel(Point( 0,-1),m_playerColor));
@@ -184,7 +184,7 @@ void Player::setupPLayerBody(Painter *p,Collider *c)
     p->addPixel(Pixel(Point( 1,4),m_playerColor));
     p->addPixel(Pixel(Point( 1,5),m_playerColor));
     c->addHitbox(Rect(-1,4,1,2));
-    c->addHitbox(Rect( 1,4,1,2));
+    c->addHitbox(Rect( 1,4,1,2));*/
 }
 void Player::setRotation(const double &deg)
 {
