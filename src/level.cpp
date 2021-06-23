@@ -80,20 +80,20 @@ void Level::setup_level()
     regenerateGrassField();
 
     m_hitboxObjectList = new ManagedGameObjectGroup();
-    m_hitboxObjectList->add(m_terainGroup);
+   // m_hitboxObjectList->add(m_terainGroup);
     m_hitboxObjectList->add(m_sheep);
     m_hitboxObjectList->add(m_grassList);
 
 
     m_engine->addGameObject(m_sheep);
-    m_engine->addGroup(m_grassList);
-    m_engine->addGroup(m_terainGroup);
-    m_engine->addGroup(m_hitboxObjectList);
+   // m_engine->addGroup(m_grassList);
+   // m_engine->addGroup(m_terainGroup);
+   // m_engine->addGroup(m_hitboxObjectList);
 
-    m_engine->setCollisionSingleInteraction(m_sheep,m_terainGroup);
-    m_engine->setCollisionSingleInteraction(m_sheep,m_grassList);
+  //  m_engine->setCollisionSingleInteraction(m_sheep,m_terainGroup);
+  //  m_engine->setCollisionSingleInteraction(m_sheep,m_grassList);
 
-    m_engine->setRenderLayer_BOTTOM(m_terainGroup);
+  //  m_engine->setRenderLayer_BOTTOM(m_terainGroup);
     m_engine->setRenderLayer_TOP(m_sheep);
 
 
@@ -140,8 +140,11 @@ void Level::userEventLoop(double tickInterval,unsigned long long tick)
     if(m_keyEvent_H->isSinking())
     {
         // Toggle hitbox visualisation
+
         m_hitboxIsVisible = !m_hitboxIsVisible;
+        m_sheep->setHitboxVisibility(m_hitboxIsVisible);
         //m_hitboxObjectList->setHitboxVisibility(m_hitboxIsVisible);
+        //getchar();
     }
 
     regenerateGrassField();
