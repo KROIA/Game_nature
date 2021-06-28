@@ -23,7 +23,7 @@
 class Level
 {
     public:
-        Level(PointU windowSize, unsigned int mapWidth);
+        Level(Vector2u  windowSize, unsigned int mapWidth);
         ~Level();
 
         // Basic Functions for creating and deleting the level
@@ -37,13 +37,13 @@ class Level
 
         // These functions will later be called from the engine
          // userEventLoop: Here you can handle your Events (KeyEvents).
-        static void userEventLoop(double tickInterval,unsigned long long tick);
+        static void userEventLoop(float tickInterval,unsigned long long tick);
          // userTickLoop: Here you can manipulate the game.
-        static void userTickLoop(double tickInterval,unsigned long long tick);
+        static void userTickLoop(float tickInterval,unsigned long long tick);
          // userDrawLoop: If you want to change something on the graphics, do it here.
          // You also can do this stuff in the userTickLoop but you may run the tickLoop faster
          // than you draw stuff, so you will waste performance.
-        static void userDrawLoop(double tickInterval,unsigned long long tick);
+        static void userDrawLoop(float tickInterval,unsigned long long tick);
 
 //========================================================
         // Put your public function declarations here:
@@ -66,7 +66,7 @@ class Level
         // Engine object
         static PixelEngine         *m_engine;
         static bool                 m_levelBuilt;
-        static PointU               m_windowSize;
+        static Vector2u                m_windowSize;
         static unsigned int         m_mapWidth;
 
 //========================================================
@@ -83,7 +83,7 @@ class Level
         static bool                 m_hitboxIsVisible;
         static Timer                m_timer1;
         static Sheep               *m_sheep;
-        static Point                m_windowMidlePoint;
+        static Vector2i               m_windowMidlePoint;
 
         static ManagedGameObjectGroup     *m_grassList;
         static unsigned int         m_maxGrassAmount;

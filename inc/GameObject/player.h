@@ -15,12 +15,12 @@ class Player    :   public GameObject
 
         virtual ~Player();
 
-        virtual void tick(const Point &direction);
+        virtual void tick(const Vector2i&direction);
         virtual unsigned int checkCollision(const vector<GameObject*> &other);
         virtual void draw(PixelDisplay &display);
 
         virtual void setColor(const Color &color);
-        virtual void setStartPos(const Point &point);
+        virtual void setStartPos(const Vector2i&point);
         virtual void setKeyBinding(const int &UP_KEY,
                                    const int &LEFT_KEY,
                                    const int &DOWN_KEY,
@@ -31,14 +31,14 @@ class Player    :   public GameObject
 
         virtual void buildPlayer(); // Generates The PlayerObject
 
-        virtual void setRotation(const double &deg);
+        virtual void setRotation(const float &deg);
         virtual void rotate_90();
         virtual void rotate_180();
         virtual void rotate_270();
-        virtual void setRotation(const PointF &rotationPoint,const double &deg);
-        virtual void rotate_90(const PointF &rotationPoint);
-        virtual void rotate_180(const PointF &rotationPoint);
-        virtual void rotate_270(const PointF &rotationPoint);
+        virtual void setRotation(const Vector2f &rotationPoint,const float &deg);
+        virtual void rotate_90(const Vector2f &rotationPoint);
+        virtual void rotate_180(const Vector2f &rotationPoint);
+        virtual void rotate_270(const Vector2f &rotationPoint);
 
         virtual void event_hasCollision(vector<GameObject *> other);
 
@@ -47,7 +47,7 @@ class Player    :   public GameObject
         virtual void setupPLayerBody(Painter *p,Collider *c);
 
         Color m_playerColor;
-        Point m_initalPos;
+        Vector2i m_initalPos;
 
         int m_keyUP;
         int m_keyLEFT;

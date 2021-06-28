@@ -25,9 +25,9 @@ bool hitboxIsVisible;
 void setup_level();
 void clear_level();
 
-void user_tick_loop(double tickInterval,unsigned long long tick);
-void user_draw_loop(double tickInterval,unsigned long long tick);
-void userEventLoop(double tickInterval,unsigned long long tick);*/
+void user_tick_loop(float tickInterval,unsigned long long tick);
+void user_draw_loop(float tickInterval,unsigned long long tick);
+void userEventLoop(float tickInterval,unsigned long long tick);*/
 
 void testDisplay();
 Sprite *loadImage(const string &image);
@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     EASY_BLOCK("Setup",profiler::colors::Amber);
     unsigned int mapWidth   = 16*40; // Width of the Grid, the hight will be calculated depending of the windowSize
     //unsigned int mapWidth   = 200;
-    double displayScale     = 0.9;
-    PointU windowSize(1900*displayScale,1000*displayScale);
+    float displayScale     = 1.8;
+    Vector2u  windowSize(1900*displayScale,1000*displayScale);
 
     Level game(windowSize,mapWidth);
     game.setup();
@@ -70,9 +70,9 @@ void testDisplay()
     EASY_PROFILER_ENABLE;
     EASY_MAIN_THREAD;
     unsigned int mapWidth   = 16*16; // Width of the Grid, the hight will be calculated depending of the windowSize
-    double displayScale     = 0.9;
-    PointU windowSize(1900*displayScale,1000*displayScale);
-    PixelDisplay display(windowSize,PointU(mapWidth,double(mapWidth)*double(windowSize.getY())/double(windowSize.getX())));
+    float displayScale     = 0.9;
+    Vector2u  windowSize(1900*displayScale,1000*displayScale);
+    PixelDisplay display(windowSize,Vector2u (mapWidth,float(mapWidth)*float(windowSize.y)/float(windowSize.x)));
 
 
 

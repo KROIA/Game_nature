@@ -35,7 +35,7 @@ Sheep::Sheep()
     m_propertyText->setString("");
     m_propertyText->setCharacterSize(20); // in pixels, not points!
     m_propertyText->setColor(Color(255,255,255,255)); // Transparent white
-    m_propertyTextRelativePos.set(16,-90);
+    m_propertyTextRelativePos = Vector2f(16,-90);
     m_propertyText->setPos(m_propertyTextRelativePos);
 
     GameObject::addText(m_propertyText);
@@ -47,8 +47,8 @@ Sheep::Sheep()
 
     m_sensor->setOwner(this);
     Collider *sensorCollider = new Collider();
-   // sensorCollider->addHitbox(Rect(-15,-19,30,6));
-    sensorCollider->addHitbox(Rect(-4,-19,9,8));
+   // sensorCollider->addHitbox(RectI(-15,-19,30,6));
+    sensorCollider->addHitbox(RectI(-4,-19,9,8));
     sensorCollider->updateBoundingBox();
     m_sensor->setSensorCollider(sensorCollider);
     setupProperty();
@@ -113,7 +113,7 @@ void Sheep::checkEvent()
     m_event_EAT->checkEvent();
     m_eventToggleStats->checkEvent();
 
-    if(m_controller->getMovingVector().getLength() > 0)
+    if(Vector::length(m_controller->getMovingVector()) > 0)
     {
         //qDebug() << "Moving";
         if(m_property.getBody().stamina > 0)
@@ -167,8 +167,8 @@ void Sheep::checkEvent()
                 {
                     // Eat some grass
                     Property::Property sheepProperty = getProperty();
-                    double availableFood = p.getFood().foodAmount;
-                    double deltaFood = 0.5;
+                    float availableFood = p.getFood().foodAmount;
+                    float deltaFood = 0.5;
                     if(availableFood < deltaFood)
                         deltaFood = availableFood;
 
@@ -206,7 +206,7 @@ void Sheep::checkEvent()
     }
 }
 
-/*void Sheep::tick(const Point &direction)
+/*void Sheep::tick(const Vector2i&direction)
 {
     GameObject::tick(direction);
 }*/
@@ -226,7 +226,7 @@ void Sheep::draw(PixelDisplay &display)
     GameObject::draw(display);
     m_sensor->draw(display);
     if(m_propertyText->isVisible())
-        m_propertyText->setPos(Vector(m_layerItem.getPos()) + m_propertyTextRelativePos);
+        m_propertyText->setPos(Vector2f(m_layerItem.getPos()) + m_propertyTextRelativePos);
    // if(m_debugTimer.start)
 }
 

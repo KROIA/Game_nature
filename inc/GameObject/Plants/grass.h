@@ -21,7 +21,7 @@ class Grass     : public GameObject
             //GameObject::setTexturePath(TexturePath::Plant::grass[variation]);
             //GameObject::loadTexture();
             //GameObject::setTextureOnPainter();
-            Rect boundingBox = Rect::getFrame(m_texture->getRects());
+            RectI boundingBox = RectI::getFrame(m_texture->getRects());
             GameObject::addHitbox(boundingBox);
 
 

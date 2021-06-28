@@ -16,7 +16,7 @@ class Sheep     : public GameObject
         virtual ~Sheep();
 
         virtual void checkEvent();
-        //virtual void tick(const Point &direction);
+        //virtual void tick(const Vector2i&direction);
         virtual unsigned int checkCollision(const vector<GameObject*> &other);
         virtual void draw(PixelDisplay &display);
 
@@ -50,7 +50,7 @@ class Sheep     : public GameObject
         Timer           m_debugTimer;
 
         DisplayText    *m_propertyText;
-        Vector          m_propertyTextRelativePos;
+        Vector2f         m_propertyTextRelativePos;
     private:
 
         Timer           m_slowTimer;

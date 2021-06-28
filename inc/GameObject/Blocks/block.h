@@ -7,8 +7,8 @@
 class Block     : public GameObject
 {
     public:
-        Block(const PointU &size = PointU(16,16));
-        Block(const PointU &size,
+        Block(const Vector2u  &size = Vector2u (16,16));
+        Block(const Vector2u  &size,
               const string &texturePath,
               const Property::Property &property);
         Block(const Block &other);
@@ -16,22 +16,22 @@ class Block     : public GameObject
         virtual const Block &operator=(const Block &other);
 
         virtual void setPos(const int &x,const int &y);
-        virtual void setPos(const Point &pos);
+        virtual void setPos(const Vector2i&pos);
 
         virtual void setX(const int &x);
         virtual void setY(const int &y);
 
-        virtual void moveToPos(const Point &destination,Controller::MovingMode mode = Controller::MovingMode::add);
+        virtual void moveToPos(const Vector2i&destination,Controller::MovingMode mode = Controller::MovingMode::add);
         virtual void moveToPos(const int &x,const int &y,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void move(const Vector &vec,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void move(const VectorF &vec,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void move(const double &deltaX, const double &deltaY,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void moveX(const double &delta,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void moveY(const double &delta,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual const Point getPos() const;
-        virtual const VectorF      &getMovingVector() const;
+        virtual void move(const Vector2i&vec,Controller::MovingMode mode = Controller::MovingMode::add);
+        virtual void move(const Vector2f &vec,Controller::MovingMode mode = Controller::MovingMode::add);
+        virtual void move(const float &deltaX, const float &deltaY,Controller::MovingMode mode = Controller::MovingMode::add);
+        virtual void moveX(const float &delta,Controller::MovingMode mode = Controller::MovingMode::add);
+        virtual void moveY(const float &delta,Controller::MovingMode mode = Controller::MovingMode::add);
+        //virtual const Vector2i &getPos() const;
+        virtual const Vector2f &getMovingVector() const;
 
-        virtual const PointU &getSize();
+        virtual const Vector2u  &getSize();
 
         virtual void setTexturePath(const string &path);
 
@@ -41,7 +41,7 @@ class Block     : public GameObject
     protected:
         virtual void setup_collider();
 
-        PointU m_size;
+        Vector2u  m_size;
         Texture         *m_texture;
         TexturePainter  *m_texturePainter;
     private:

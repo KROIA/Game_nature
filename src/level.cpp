@@ -5,7 +5,7 @@
 // Engine object
 PixelEngine         *Level::m_engine;
 bool                 Level::m_levelBuilt;
-PointU               Level::m_windowSize;
+Vector2u                Level::m_windowSize;
 unsigned int         Level::m_mapWidth;
 
 //========================================================
@@ -22,7 +22,7 @@ ManagedGameObjectGroup     *Level::m_hitboxObjectList;
 bool                 Level::m_hitboxIsVisible;
 Timer                Level::m_timer1;
 Sheep               *Level::m_sheep;
-Point                Level::m_windowMidlePoint;
+Vector2i               Level::m_windowMidlePoint;
 
 ManagedGameObjectGroup     *Level::m_grassList;
 unsigned int         Level::m_maxGrassAmount;
@@ -32,7 +32,7 @@ unsigned int         Level::m_maxGrassAmount;
 PixelPainter *Level::m_pixPainter;
 GameObject   *Level::m_testObj;
 
-Level::Level(PointU windowSize, unsigned int mapWidth)
+Level::Level(Vector2u  windowSize, unsigned int mapWidth)
 {
     m_windowSize    = windowSize;
     m_mapWidth      = mapWidth;
@@ -59,7 +59,7 @@ void Level::setup()
 // Setup for the engine
 void Level::setup_engine()
 {
-    m_engine = new PixelEngine (PointU(m_mapWidth,double(m_mapWidth)*double(m_windowSize.getY())/double(m_windowSize.getX())),m_windowSize);
+    m_engine = new PixelEngine (Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x)),m_windowSize);
 
     m_engine->set_setting_checkEventInterval(1.0f/30.0f);
     m_engine->set_setting_gameTickInterval(1.0f/240.0f);
@@ -77,7 +77,7 @@ void Level::setup_level()
 
    /* m_pixPainter = new PixelPainter();
     Color col(255,0,0);
-    PointU size(31,31);
+    Vector2u  size(31,31);
     m_pixPainter->resize(size);
     for(unsigned int x=0; x<size.getX(); x++)
     {
@@ -108,7 +108,7 @@ void Level::setup_level()
     GameObject *m_testObj2 = new GameObject();
     PixelPainter *p2 = new PixelPainter();
     p2 = m_pixPainter;
-    p2->setOrigin(PointF(0,0));
+    p2->setOrigin(Vector2f(0,0));
     m_testObj2->setPainter(p2);*/
 
    /* */
@@ -120,7 +120,7 @@ void Level::setup_level()
 
 #ifndef CLEAR_LEVEL
     // Generate random Blocks on Position ( 10 | 10 ) with the size of ( 5 x 4 ) blocks
-    m_terainGroup = factory_terain(RectU(PointU(8,8),PointU(0,0)));
+    m_terainGroup = factory_terain(RectU(Vector2u (8,8),Vector2u (0,0)));
 
     m_windowMidlePoint= Point(m_engine->getMapSize().getX()/2,m_engine->getMapSize().getY()/2);
     m_sheep = new Sheep();
@@ -136,9 +136,9 @@ void Level::setup_level()
     m_hitboxObjectList = new ManagedGameObjectGroup();
 #else
     m_hitboxObjectList = new ManagedGameObjectGroup();
-    m_windowMidlePoint= Point(m_engine->getMapSize().getX()/2,m_engine->getMapSize().getY()/2);
+    m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPos(Point(150,50));
+    m_sheep->setPos(Vector2i(150,50));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -152,7 +152,7 @@ void Level::setup_level()
     obsticleTexturePainter->setTexture(obsticleTexture);
 
     Collider *obsticleCollider = new Collider();
-    obsticleCollider->addHitbox(Rect(0,0,16,16));
+    obsticleCollider->addHitbox(RectI(0,0,16,16));
     obsticleCollider->updateBoundingBox();
     obsticle->setCollider(obsticleCollider);
     obsticle->setPainter(obsticleTexturePainter);
@@ -233,7 +233,7 @@ bool Level::engineIsActive()
 
 // These functions will later be called from the engine
  // userEventLoop: Here you can handle your Events (KeyEvents).
-void Level::userEventLoop(double tickInterval,unsigned long long tick)
+void Level::userEventLoop(float tickInterval,unsigned long long tick)
 {
     // Check for keyEvents
     m_keyEvent_P->checkEvent();
@@ -242,7 +242,7 @@ void Level::userEventLoop(double tickInterval,unsigned long long tick)
     if(m_keyEvent_P->isSinking())
     {
         // Toggle stats visualisation
-        m_engine->display_stats(!m_engine->display_stats(),Color(200,200,200),Point(m_engine->getMapSize().getX()-16*22,5));
+        m_engine->display_stats(!m_engine->display_stats(),Color(200,200,200),Vector2i(m_engine->getMapSize().x-16*22,5));
     }
 
     if(m_keyEvent_H->isSinking())
@@ -260,10 +260,10 @@ void Level::userEventLoop(double tickInterval,unsigned long long tick)
 }
 
  // userTickLoop: Here you can manipulate the game.
-void Level::userTickLoop(double tickInterval,unsigned long long tick)
+void Level::userTickLoop(float tickInterval,unsigned long long tick)
 {
 #ifdef GLOBALVIEW
-    VectorF movingVec = VectorF(m_windowMidlePoint.getX(),m_windowMidlePoint.getY()) - VectorF(m_sheep->getPos().getX(),m_sheep->getPos().getY());
+    Vector2f movingVec = Vector2f(m_windowMidlePoint.getX(),m_windowMidlePoint.getY()) - Vector2f(m_sheep->getPos().getX(),m_sheep->getPos().getY());
     if(movingVec.getLength() > 0)
     {
         m_sheep->setPos(m_windowMidlePoint);
@@ -276,7 +276,7 @@ void Level::userTickLoop(double tickInterval,unsigned long long tick)
  // userDrawLoop: If you want to change something on the graphics, do it here.
  // You also can do this stuff in the userTickLoop but you may run the tickLoop faster
  // than you draw stuff, so you will waste performance.
-void Level::userDrawLoop(double tickInterval,unsigned long long tick)
+void Level::userDrawLoop(float tickInterval,unsigned long long tick)
 {
 
     if(m_timer1.start(0.1))
@@ -308,30 +308,30 @@ ManagedGameObjectGroup *Level::factory_terain(RectU area)
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     };*/
     //qDebug() << "map: x: "<<map.size()<< " y: "<<map[0].size();
-    PointU randomPos;
-    if(area.getSize().getX() == 0 && area.getSize().getY() == 0)
+    Vector2u  randomPos;
+    if(area.getSize().x == 0 && area.getSize().y == 0)
     {
-        randomPos.set(0,0);
+        randomPos = Vector2u(0,0);
         area.setSize(texture.getSize());
     }
-    else if(texture.getSize().getY() < area.getSize().getY() || texture.getSize().getX() < area.getSize().getX())
+    else if(texture.getSize().x < area.getSize().x || texture.getSize().y < area.getSize().y)
     {
-        area.setSize(texture.getSize().getX(),texture.getSize().getY());
-        randomPos.set(0,0);
+        area.setSize(texture.getSize().x,texture.getSize().y);
+        randomPos = Vector2u(0,0);
     }
     else
     {
-        randomPos = PointU(PixelEngine::random(0,texture.getSize().getX()    - area.getSize().getX()),
-                           PixelEngine::random(0,texture.getSize().getY()    - area.getSize().getY()));
+        randomPos = Vector2u (PixelEngine::random(0,texture.getSize().x    - area.getSize().x),
+                              PixelEngine::random(0,texture.getSize().y    - area.getSize().y));
     }
 
     ManagedGameObjectGroup *group = new ManagedGameObjectGroup();
-    for(unsigned int x=0; x<area.getSize().getX(); x++)
+    for(unsigned int x=0; x<area.getSize().x; x++)
     {
-        for(unsigned int y=0; y<area.getSize().getY(); y++)
+        for(unsigned int y=0; y<area.getSize().y; y++)
         {
             Block *block;
-            Color color = texture.getColor(Point(randomPos.getX() + x,randomPos.getY() + y));
+            Color color = texture.getColor(Vector2i(randomPos.x + x,randomPos.y + y));
 
             if(colorInRange(color, Color(0,255,0,255)))
             {
@@ -350,7 +350,7 @@ ManagedGameObjectGroup *Level::factory_terain(RectU area)
                 block = new WaterBlock();
             }else
             {
-                qDebug() << "not defined field on Map: "<<randomPos.getX() + x<< " "<<randomPos.getY() + y;
+                qDebug() << "not defined field on Map: "<<randomPos.x + x<< " "<<randomPos.y + y;
                 block = new GrassBlock();
             }
           /*  switch()
@@ -361,7 +361,7 @@ ManagedGameObjectGroup *Level::factory_terain(RectU area)
                 case 3: block = new StoneBlock(); break;
                 case 4: block = new WaterBlock(); break;
             }*/
-            block->setPos(area.getPos().getX() + x*block->getSize().getX() ,area.getPos().getY() + y*block->getSize().getY() );
+            block->setPos(area.getPos().x + x*block->getSize().x ,area.getPos().y + y*block->getSize().y );
             group->add(block);
         }
     }

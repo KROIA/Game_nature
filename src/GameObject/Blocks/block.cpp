@@ -1,6 +1,6 @@
 #include "block.h"
 
-Block::Block(const PointU &size)
+Block::Block(const Vector2u  &size)
     :   GameObject()
 {
     m_size = size;
@@ -11,7 +11,7 @@ Block::Block(const PointU &size)
     GameObject::setPainter(m_texturePainter);
     //this->setup_collider();
 }
-Block::Block(const PointU &size,
+Block::Block(const Vector2u  &size,
              const string &texturePath,
              const Property::Property &property)
     :   GameObject()
@@ -43,7 +43,7 @@ void Block::setPos(const int &x,const int &y)
 {
     GameObject::setPos(x,y);
 }
-void Block::setPos(const Point &pos)
+void Block::setPos(const Vector2i&pos)
 {
     GameObject::setPos(pos);
 }
@@ -57,7 +57,7 @@ void Block::setY(const int &y)
     GameObject::setY(y);
 }
 
-void Block::moveToPos(const Point &destination,Controller::MovingMode mode)
+void Block::moveToPos(const Vector2i&destination,Controller::MovingMode mode)
 {
     GameObject::moveToPos(destination,mode);
 }
@@ -65,36 +65,36 @@ void Block::moveToPos(const int &x,const int &y,Controller::MovingMode mode)
 {
     GameObject::moveToPos(x,y,mode);
 }
-void Block::move(const Vector &vec,Controller::MovingMode mode)
+void Block::move(const Vector2i&vec,Controller::MovingMode mode)
 {
     GameObject::move(vec,mode);
 }
-void Block::move(const VectorF &vec,Controller::MovingMode mode)
+void Block::move(const Vector2f &vec,Controller::MovingMode mode)
 {
     GameObject::move(vec,mode);
 }
-void Block::move(const double &deltaX, const double &deltaY,Controller::MovingMode mode)
+void Block::move(const float &deltaX, const float &deltaY,Controller::MovingMode mode)
 {
     GameObject::move(deltaX,deltaY,mode);
 }
-void Block::moveX(const double &delta,Controller::MovingMode mode)
+void Block::moveX(const float &delta,Controller::MovingMode mode)
 {
     GameObject::moveX(delta,mode);
 }
-void Block::moveY(const double &delta,Controller::MovingMode mode)
+void Block::moveY(const float &delta,Controller::MovingMode mode)
 {
     GameObject::moveY(delta,mode);
 }
-const Point Block::getPos() const
+/*Vector2f Block::getPos() const
 {
     return GameObject::getPos();
-}
-const VectorF      &Block::getMovingVector() const
+}*/
+const Vector2f      &Block::getMovingVector() const
 {
     return GameObject::getMovingVector();
 }
 
-const PointU &Block::getSize()
+const Vector2u  &Block::getSize()
 {
     return m_size;
 }
@@ -125,8 +125,8 @@ const Property::Property &Block::getProperty() const
 }*/
 void Block::setup_collider()
 {
-  //  GameObject::addHitbox(Rect(m_size.getX(),m_size.getY()));
-    Rect boundingBox = Rect::getFrame(m_texture->getRects());
+  //  GameObject::addHitbox(RectI(m_size.getX(),m_size.getY()));
+    RectI boundingBox = RectI::getFrame(m_texture->getRects());
     GameObject::addHitbox(boundingBox);
 }
 
