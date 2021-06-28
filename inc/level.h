@@ -88,5 +88,9 @@ class Level
         static ManagedGameObjectGroup     *m_grassList;
         static unsigned int         m_maxGrassAmount;
 
+        // TESTS
+        static PixelPainter *m_pixPainter;
+        static GameObject   *m_testObj;
+
 };
 #endif // LEVEL_H

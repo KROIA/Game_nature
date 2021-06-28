@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 
     EASY_BLOCK("Setup",profiler::colors::Amber);
     unsigned int mapWidth   = 16*40; // Width of the Grid, the hight will be calculated depending of the windowSize
+    //unsigned int mapWidth   = 200;
     double displayScale     = 0.9;
     PointU windowSize(1900*displayScale,1000*displayScale);
 

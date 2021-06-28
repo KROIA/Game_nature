@@ -2,6 +2,7 @@
 #define BLOCK_H
 #include "gameobject.h"
 #include "texturePaths.h"
+#include "texturePainter.h"
 
 class Block     : public GameObject
 {
@@ -41,6 +42,8 @@ class Block     : public GameObject
         virtual void setup_collider();
 
         PointU m_size;
+        Texture         *m_texture;
+        TexturePainter  *m_texturePainter;
     private:
 
 };

@@ -4,6 +4,11 @@ Block::Block(const PointU &size)
     :   GameObject()
 {
     m_size = size;
+    m_texturePainter    = new TexturePainter();
+    m_texture           = new Texture();
+
+    m_texturePainter->setTexture(m_texture);
+    GameObject::setPainter(m_texturePainter);
     //this->setup_collider();
 }
 Block::Block(const PointU &size,
@@ -12,6 +17,8 @@ Block::Block(const PointU &size,
     :   GameObject()
 {
     m_size = size;
+    m_texturePainter = new TexturePainter();
+    GameObject::setPainter(m_texturePainter);
     this->setTexturePath(texturePath);
     this->setProperty(property);
     this->setup_collider();
@@ -94,9 +101,10 @@ const PointU &Block::getSize()
 
 void Block::setTexturePath(const string &path)
 {
-    GameObject::setTexturePath(path);
-    GameObject::loadTexture();
-    GameObject::setTextureOnPainter();
+    m_texture->loadTexture(path);
+   // GameObject::setTexturePath(path);
+   // GameObject::loadTexture();
+   // GameObject::setTextureOnPainter();
 
 
 }

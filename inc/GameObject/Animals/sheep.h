@@ -6,6 +6,7 @@
 #include "animatedTexture.h"
 #include "texturePaths.h"
 #include "timer.h"
+#include "texturePainter.h"
 
 class Sheep     : public GameObject
 {
@@ -34,8 +35,9 @@ class Sheep     : public GameObject
         virtual void setupProperty();
         virtual void updatePropertyText();
 
-        AnimatedTexture *m_animatedTexture;
-        //Texture         *m_texture;
+        //AnimatedTexture *m_animatedTexture;
+        TexturePainter  *m_texturePainter;
+        Texture         *m_texture;
         Sensor          *m_sensor;
         KeyController   *m_controller;
 

@@ -2,18 +2,25 @@
 #define FLOWER_H
 #include "gameobject.h"
 #include "texturePaths.h"
+#include "texturePainter.h"
 
 class Flower     : public GameObject
 {
     public:
         Flower(unsigned int variation = 0)
+            :   GameObject()
         {
+            m_texture           = new Texture();
+            m_texturePainter    = new TexturePainter();
+
             if(variation >= TexturePath::Plant::flower.size())
                 variation = 0;
 
-            GameObject::setTexturePath(TexturePath::Plant::flower[variation]);
-            GameObject::loadTexture();
-            GameObject::setTextureOnPainter();
+            m_texture->loadTexture(TexturePath::Plant::flower[variation]);
+
+            //GameObject::setTexturePath(TexturePath::Plant::flower[variation]);
+            //GameObject::loadTexture();
+            //GameObject::setTextureOnPainter();
             Rect boundingBox = Rect::getFrame(m_texture->getRects());
             GameObject::addHitbox(boundingBox);
 
@@ -21,7 +28,7 @@ class Flower     : public GameObject
             Property::Body body;
             Property::Food food;
 
-            GameObject::setTexturePath(TexturePath::Block::grass);
+            //GameObject::setTexturePath(TexturePath::Block::grass);
 
             type.description        = Property::Description::staticObstacle;
 
@@ -41,12 +48,16 @@ class Flower     : public GameObject
 
             GameObject::setProperty(property);
 
+            m_texturePainter->setTexture(m_texture);
+            GameObject::setPainter(m_texturePainter);
+
         }
 
-        ~Flower(){};
+        ~Flower(){ delete m_texture; };
 
     protected:
-
+        Texture *m_texture;
+        TexturePainter *m_texturePainter;
     private:
 
 };
