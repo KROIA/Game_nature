@@ -91,6 +91,7 @@ class Level
         // TESTS
         static PixelPainter *m_pixPainter;
         static GameObject   *m_testObj;
+        static int counter;
 
 };
 #endif // LEVEL_H

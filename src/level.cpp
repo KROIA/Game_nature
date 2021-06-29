@@ -31,6 +31,7 @@ unsigned int         Level::m_maxGrassAmount;
 // TESTS
 PixelPainter *Level::m_pixPainter;
 GameObject   *Level::m_testObj;
+int Level::counter = 0;
 
 Level::Level(Vector2u  windowSize, unsigned int mapWidth)
 {
@@ -59,20 +60,22 @@ void Level::setup()
 // Setup for the engine
 void Level::setup_engine()
 {
+    qDebug() << "setup_engine";
     m_engine = new PixelEngine (Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x)),m_windowSize);
 
     m_engine->set_setting_checkEventInterval(1.0f/30.0f);
-    m_engine->set_setting_gameTickInterval(1.0f/30.0f);
-    m_engine->set_setting_displayInterval(1.0f/30.0f);
+    m_engine->set_setting_gameTickInterval(1.0f/120.0f);
+    m_engine->set_setting_displayInterval(1.0f/50.0f);
 
     m_engine->setUserTickLoop(Level::userTickLoop);
     m_engine->setUserDisplayLoop(Level::userDrawLoop);
     m_engine->setUserCheckEventLoop(Level::userEventLoop);
+    qDebug() << "setup_engine done";
 }
 // Build all GameObjects and configures them
 void Level::setup_level()
 {
-    qDebug() << "setup_level()";
+    qDebug() << "setup_level";
     // TESTS
 
    /* m_pixPainter = new PixelPainter();
@@ -131,7 +134,9 @@ void Level::setup_level()
     // Generate Grass
     m_maxGrassAmount    = m_terainGroup->size()*1.5;
     m_grassList         = new ManagedGameObjectGroup();
+    qDebug() << "regenerateGrassField";
     regenerateGrassField();
+    qDebug() << "regenerateGrassField done";
 
     m_hitboxObjectList = new ManagedGameObjectGroup();
 #else
@@ -168,6 +173,7 @@ void Level::setup_level()
 
 #ifndef CLEAR_LEVEL
     //m_hitboxObjectList->add(m_terainGroup);
+    qDebug() << "add to m_hitboxObjectList";
     m_hitboxObjectList->add(m_grassList);
     m_hitboxObjectList->add(m_sheep);
 #else
@@ -177,6 +183,7 @@ void Level::setup_level()
 
 
 #ifndef CLEAR_LEVEL
+    qDebug() << "add to engine";
     m_engine->addGameObject(m_sheep);
     m_engine->addGroup(m_terainGroup);
     m_engine->addGroup(m_grassList);
@@ -195,8 +202,9 @@ void Level::setup_level()
 
 #ifndef CLEAR_LEVEL
   //  m_engine->setCollisionSingleInteraction(m_sheep,m_terainGroup);
+    qDebug() << "set interactions";
     m_engine->setCollisionSingleInteraction(m_sheep,m_grassList);
-    m_engine->setRenderLayer_BOTTOM(m_terainGroup);
+    //m_engine->setRenderLayer_BOTTOM(m_terainGroup);
     m_engine->setRenderLayer_TOP(m_sheep);
 #else
     m_engine->setCollisionSingleInteraction(m_sheep,obsticle);
@@ -204,13 +212,15 @@ void Level::setup_level()
 
 #endif
 
-    qDebug() << "setup_level() end";
+    qDebug() << "setup_level done";
 }
 // Setup the keybindings for special keyEvents
 void Level::setup_keyEvent()
 {
+    qDebug() << "setup_keyEvent";
     m_keyEvent_P = new Event(KEYBOARD_KEY_P);
     m_keyEvent_H = new Event(KEYBOARD_KEY_H);
+    qDebug() << "setup_keyEvent done";
 }
 void Level::cleanup()
 {
@@ -224,6 +234,10 @@ void Level::run()
     m_engine->checkEvent();
     m_engine->tick();
     m_engine->display();
+
+    //counter++;
+    //if(m_engine->getTick() > 10)
+     //   m_engine->stop();
 }
 // Is used to chech if the window was closed
 bool Level::engineIsActive()
@@ -262,14 +276,18 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick)
  // userTickLoop: Here you can manipulate the game.
 void Level::userTickLoop(float tickInterval,unsigned long long tick)
 {
+#ifndef CLEAR_LEVEL
 #ifdef GLOBALVIEW
-    Vector2f movingVec = Vector2f(m_windowMidlePoint.getX(),m_windowMidlePoint.getY()) - Vector2f(m_sheep->getPos().getX(),m_sheep->getPos().getY());
-    if(movingVec.getLength() > 0)
+    Vector2f movingVec = Vector2f(m_windowMidlePoint) - Vector2f(m_sheep->getPos());
+    if(Vector::length(movingVec) > 0)
     {
-        m_sheep->setPos(m_windowMidlePoint);
+        /*m_sheep->setPos(m_windowMidlePoint);
         m_terainGroup->move(movingVec);
-        m_grassList->move(movingVec);
+        m_grassList->move(movingVec);*/
+        //m_engine->display_moveRenderFrame(-m_sheep->getMovingVector());
+        m_engine->display_setRenderFramePosCenter(m_sheep->getPos());
     }
+#endif
 #endif
 }
 
@@ -288,7 +306,7 @@ void Level::userDrawLoop(float tickInterval,unsigned long long tick)
 
 ManagedGameObjectGroup *Level::factory_terain(RectU area)
 {
-    qDebug() << "factory_terain()";
+    qDebug() << "factory_terain";
     Texture texture;
     //texture.setOriginType(Texture::Origin::topLeft);
     texture.loadTexture(TexturePath::tearainMap);
@@ -326,6 +344,7 @@ ManagedGameObjectGroup *Level::factory_terain(RectU area)
     }
 
     ManagedGameObjectGroup *group = new ManagedGameObjectGroup();
+    group->reserve(area.getSize().x * area.getSize().y);
     for(unsigned int x=0; x<area.getSize().x; x++)
     {
         for(unsigned int y=0; y<area.getSize().y; y++)
@@ -364,26 +383,31 @@ ManagedGameObjectGroup *Level::factory_terain(RectU area)
             block->setPos(area.getPos().x + x*block->getSize().x ,area.getPos().y + y*block->getSize().y );
             group->add(block);
         }
+        qDebug() << x*100/area.getSize().x << " %";
     }
-    qDebug() << "factory_terain() end";
+    qDebug() << "factory_terain done";
     return group;
 }
 void Level::regenerateGrassField()
 {
+    if(m_grassList->size() >= m_maxGrassAmount)
+        return;
   //  qDebug() << "regenerateGrassField() "<<m_maxGrassAmount;
+    GameObjectGroup grassBlockGroup;
+    for(size_t i=0; i<m_terainGroup->size(); i++)
+    {
+        if((*m_terainGroup)[i]->getProperty().getBody().material == Property::Material::Grass)
+        {
+            grassBlockGroup.add((*m_terainGroup)[i]);
+        }
+    }
+    m_grassList->reserve(m_maxGrassAmount);
     while(m_grassList->size() < m_maxGrassAmount)
     {
         //Grass *grass = new Grass();
         //Point randomPos(PixelEngine::random(0,200),PixelEngine::random(0,200));
         //bool grassGodToPlant = false;
-        GameObjectGroup grassBlockGroup;
-        for(size_t i=0; i<m_terainGroup->size(); i++)
-        {
-            if((*m_terainGroup)[i]->getProperty().getBody().material == Property::Material::Grass)
-            {
-                grassBlockGroup.add((*m_terainGroup)[i]);
-            }
-        }
+
         size_t randBlock = PixelEngine::random(0,grassBlockGroup.size()-1);
 
         // Get random generated Plant
@@ -407,7 +431,9 @@ void Level::regenerateGrassField()
       // qDebug() << "add plant: "<<m_grassList->size();
         //m_engine->
         //m_engine->setCollisionSingleInteraction(m_sheep,grass);
+        qDebug() << m_grassList->size()*100/m_maxGrassAmount<< " %";
     }
+
    // qDebug() << "regenerateGrassField() end";
 }
 bool Level::colorInRange(const Color &col1,const Color &col2,unsigned int range)
