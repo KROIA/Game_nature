@@ -1,6 +1,6 @@
 #include "level.h"
 //#define GLOBALVIEW
-#define CLEAR_LEVEL
+//#define CLEAR_LEVEL
 
 // Engine object
 PixelEngine         *Level::m_engine;
@@ -62,7 +62,7 @@ void Level::setup_engine()
     m_engine = new PixelEngine (Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x)),m_windowSize);
 
     m_engine->set_setting_checkEventInterval(1.0f/30.0f);
-    m_engine->set_setting_gameTickInterval(1.0f/240.0f);
+    m_engine->set_setting_gameTickInterval(1.0f/30.0f);
     m_engine->set_setting_displayInterval(1.0f/30.0f);
 
     m_engine->setUserTickLoop(Level::userTickLoop);
@@ -122,9 +122,9 @@ void Level::setup_level()
     // Generate random Blocks on Position ( 10 | 10 ) with the size of ( 5 x 4 ) blocks
     m_terainGroup = factory_terain(RectU(Vector2u (8,8),Vector2u (0,0)));
 
-    m_windowMidlePoint= Point(m_engine->getMapSize().getX()/2,m_engine->getMapSize().getY()/2);
+    m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPos(Point(150,50));
+    m_sheep->setPos(Vector2f(150,50));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -167,7 +167,7 @@ void Level::setup_level()
 
 
 #ifndef CLEAR_LEVEL
-    m_hitboxObjectList->add(m_terainGroup);
+    //m_hitboxObjectList->add(m_terainGroup);
     m_hitboxObjectList->add(m_grassList);
     m_hitboxObjectList->add(m_sheep);
 #else
@@ -242,7 +242,7 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick)
     if(m_keyEvent_P->isSinking())
     {
         // Toggle stats visualisation
-        m_engine->display_stats(!m_engine->display_stats(),Color(200,200,200),Vector2i(m_engine->getMapSize().x-16*22,5));
+        m_engine->display_stats(!m_engine->display_stats(),Color(200,200,200),Vector2i(0,5));
     }
 
     if(m_keyEvent_H->isSinking())

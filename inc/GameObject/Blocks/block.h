@@ -15,11 +15,11 @@ class Block     : public GameObject
         virtual ~Block();
         virtual const Block &operator=(const Block &other);
 
-        virtual void setPos(const int &x,const int &y);
+        virtual void setPos(int x, int y);
         virtual void setPos(const Vector2i&pos);
 
-        virtual void setX(const int &x);
-        virtual void setY(const int &y);
+        virtual void setX(int x);
+        virtual void setY(int y);
 
         virtual void moveToPos(const Vector2i&destination,Controller::MovingMode mode = Controller::MovingMode::add);
         virtual void moveToPos(const int &x,const int &y,Controller::MovingMode mode = Controller::MovingMode::add);

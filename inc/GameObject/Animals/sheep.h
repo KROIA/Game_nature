@@ -8,6 +8,8 @@
 #include "timer.h"
 #include "texturePainter.h"
 
+//#define USE_ANIMATED_TEXTURE
+
 class Sheep     : public GameObject
 {
     public:
@@ -30,14 +32,18 @@ class Sheep     : public GameObject
 
         virtual void event_hasCollision(vector<GameObject *> other);
 
+        virtual void setHitboxVisibility(const bool &isVisible);
 
     protected:
         virtual void setupProperty();
         virtual void updatePropertyText();
 
-        //AnimatedTexture *m_animatedTexture;
-        TexturePainter  *m_texturePainter;
+#ifdef USE_ANIMATED_TEXTURE
+        AnimatedTexture *m_animatedTexture;
+#else
         Texture         *m_texture;
+#endif
+        TexturePainter  *m_texturePainter;
         Sensor          *m_sensor;
         KeyController   *m_controller;
 

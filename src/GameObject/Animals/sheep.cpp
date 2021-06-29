@@ -3,8 +3,23 @@
 Sheep::Sheep()
     :   GameObject()
 {
-    //m_animatedTexture   = new AnimatedTexture();
+    m_texturePainter    = new TexturePainter();
+#ifdef USE_ANIMATED_TEXTURE
+    m_animatedTexture   = new AnimatedTexture();
+    m_animatedTexture->setOriginType(Origin::middle);
+    setTexturePathList(TexturePath::Animal::sheep);
+    m_texturePainter->setTexture(m_animatedTexture);
+    GameObject::setHitboxFromTexture(*m_animatedTexture);
+#else
     m_texture           = new Texture();
+    m_texture->setOriginType(Origin::middle);
+    setTexturePathList(TexturePath::Animal::sheep);
+
+    m_texturePainter->setTexture(m_texture);
+     GameObject::setHitboxFromTexture(*m_texture);
+#endif
+
+
     m_sensor            = new Sensor();
     m_controller        = new KeyController();
 
@@ -14,21 +29,11 @@ Sheep::Sheep()
     m_eventToggleStats  = new Event();
 
     m_propertyText         = new DisplayText();
-    m_texturePainter    = new TexturePainter();
 
-    //m_animatedTexture->setOriginType(Origin::middle);
-    m_texture->setOriginType(Origin::middle);
-    setTexturePathList(TexturePath::Animal::sheep);
 
-    m_texturePainter->setTexture(m_texture);
-    //m_texturePainter->setTexture(m_animatedTexture);
 
-    //m_texturePainter->setOriginType(Origin::middle);
     GameObject::setPainter(m_texturePainter);
 
-
-    //GameObject::setTexture(m_animatedTexture);
-  //  GameObject::setTexture(m_texture);
     GameObject::addController(m_controller);
 
     m_propertyText->setVisibility(false);
@@ -52,14 +57,23 @@ Sheep::Sheep()
     sensorCollider->updateBoundingBox();
     m_sensor->setSensorCollider(sensorCollider);
     setupProperty();
-    //GameObject::setHitboxFromTexture(*m_animatedTexture);
-    GameObject::setHitboxFromTexture(*m_texture);
+
+
 }
 Sheep::Sheep(const Sheep &other)
     :   GameObject(other)
 {
-    //m_animatedTexture   = new AnimatedTexture();
+#ifdef USE_ANIMATED_TEXTURE
+    m_animatedTexture   = new AnimatedTexture();
+    *this->m_animatedTexture    = *other.m_animatedTexture;
+    m_texturePainter->setTexture(m_animatedTexture);
+    GameObject::setHitboxFromTexture(*m_animatedTexture);
+#else
     m_texture           = new Texture();
+    *this->m_texture    = *other.m_texture;
+    m_texturePainter->setTexture(m_texture);
+    GameObject::setHitboxFromTexture(*m_texture);
+#endif
     m_sensor            = new Sensor();
     m_controller        = new KeyController();
 
@@ -71,8 +85,8 @@ Sheep::Sheep(const Sheep &other)
     m_propertyText         = new DisplayText();
     m_texturePainter    = new TexturePainter();
 
-    //*this->m_animatedTexture    = *other.m_animatedTexture;
-    *this->m_texture            = *other.m_texture;
+    //
+
     *this->m_sensor             = *other.m_sensor;
     *this->m_controller         = *other.m_controller;
     *this->m_eventLEFT          = *other.m_eventLEFT;
@@ -84,14 +98,14 @@ Sheep::Sheep(const Sheep &other)
     //GameObject::setTexture(m_animatedTexture);
    // GameObject::setTexture(m_texture);
 
-    //m_texturePainter->setTexture(m_animatedTexture);
-    m_texturePainter->setTexture(m_texture);
+
+
     GameObject::setPainter(m_texturePainter);
     GameObject::clearController();
     GameObject::addController(m_controller);
     GameObject::addText(m_propertyText);
-    GameObject::setHitboxFromTexture(*m_texture);
-    //GameObject::setHitboxFromTexture(*m_animatedTexture);
+
+
 }
 Sheep::~Sheep()
 {
@@ -132,22 +146,32 @@ void Sheep::checkEvent()
         }*/
     }
 
-    if(m_eventLEFT->isSinking())
+    float deltaDeg = 5;
+    if(m_eventLEFT->isPressed())
     {
-        m_controller->setRotation(m_controller->getRotation()-45);
-        //m_animatedTexture->selectBackward();
-        //GameObject::setHitboxFromTexture(*m_animatedTexture);
+
+        m_controller->setRotation(m_controller->getRotation()-deltaDeg);
         //m_texture->rotate(-45);
-        m_texturePainter->rotate(-45);
+#ifdef USE_ANIMATED_TEXTURE
+        m_animatedTexture->selectBackward();
+        GameObject::setHitboxFromTexture(*m_animatedTexture);
+#else
+        m_texturePainter->rotate(-deltaDeg);
+#endif
+
         m_sensor->setRotation(m_controller->getRotation());
     }
-    if(m_eventRIGHT->isSinking())
+    if(m_eventRIGHT->isPressed())
     {
-        m_controller->setRotation(m_controller->getRotation()+45);
-        //m_animatedTexture->selectForward();
-        //GameObject::setHitboxFromTexture(*m_animatedTexture);
+        m_controller->setRotation(m_controller->getRotation()+deltaDeg);
         //m_texture->rotate(45);
-        m_texturePainter->rotate(45);
+#ifdef USE_ANIMATED_TEXTURE
+        m_animatedTexture->selectForward();
+        GameObject::setHitboxFromTexture(*m_animatedTexture);
+#else
+        m_texturePainter->rotate(deltaDeg);
+#endif
+
         m_sensor->setRotation(m_controller->getRotation());
     }
 
@@ -232,13 +256,16 @@ void Sheep::draw(PixelDisplay &display)
 
 void Sheep::setTexturePathList(const vector<string> &pathList)
 {
+#ifdef USE_ANIMATED_TEXTURE
     //m_animatedTexture->setOrigin(Point(8,8));
-   /* for(const string &path : pathList)
+    for(const string &path : pathList)
     {
         m_animatedTexture->addTexture(path);
     }
-    m_animatedTexture->loadTexture();*/
+    //m_animatedTexture->loadTexture();
+#else
     m_texture->loadTexture(pathList[0]);
+#endif
    // m_texturePainter->setTexture(m_animatedTexture);
   /*  if(pathList.size() != 0)
     {
@@ -283,6 +310,11 @@ void Sheep::event_hasCollision(vector<GameObject *> other)
             GameObject::event_hasCollision(other);
     }
 
+}
+void Sheep::setHitboxVisibility(const bool &isVisible)
+{
+    GameObject::setHitboxVisibility(isVisible);
+    m_sensor->showBoundingBox(isVisible);
 }
 void Sheep::setupProperty()
 {

@@ -18,6 +18,7 @@ Block::Block(const Vector2u  &size,
 {
     m_size = size;
     m_texturePainter = new TexturePainter();
+    m_texture        = new Texture();
     GameObject::setPainter(m_texturePainter);
     this->setTexturePath(texturePath);
     this->setProperty(property);
@@ -38,8 +39,7 @@ const Block &Block::operator=(const Block &other)
     this->m_size    = other.m_size;
     return *this;
 }
-
-void Block::setPos(const int &x,const int &y)
+void Block::setPos(int x, int y)
 {
     GameObject::setPos(x,y);
 }
@@ -48,11 +48,11 @@ void Block::setPos(const Vector2i&pos)
     GameObject::setPos(pos);
 }
 
-void Block::setX(const int &x)
+void Block::setX(int x)
 {
     GameObject::setX(x);
 }
-void Block::setY(const int &y)
+void Block::setY(int y)
 {
     GameObject::setY(y);
 }

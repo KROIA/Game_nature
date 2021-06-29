@@ -44,9 +44,9 @@ int main(int argc, char *argv[])
 
 
     EASY_BLOCK("Setup",profiler::colors::Amber);
-    unsigned int mapWidth   = 16*40; // Width of the Grid, the hight will be calculated depending of the windowSize
+    unsigned int mapWidth   = 16*10; // Width of the Grid, the hight will be calculated depending of the windowSize
     //unsigned int mapWidth   = 200;
-    float displayScale     = 1.8;
+    float displayScale     = 0.9;
     Vector2u  windowSize(1900*displayScale,1000*displayScale);
 
     Level game(windowSize,mapWidth);
