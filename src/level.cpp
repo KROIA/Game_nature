@@ -31,7 +31,6 @@ unsigned int         Level::m_maxGrassAmount;
 // TESTS
 PixelPainter *Level::m_pixPainter;
 GameObject   *Level::m_testObj;
-int Level::counter = 0;
 
 Level::Level(Vector2u  windowSize, unsigned int mapWidth)
 {
@@ -235,9 +234,8 @@ void Level::run()
     m_engine->tick();
     m_engine->display();
 
-    //counter++;
-    //if(m_engine->getTick() > 10)
-     //   m_engine->stop();
+   // if(m_engine->getTick() > 10)
+   //    m_engine->stop();
 }
 // Is used to chech if the window was closed
 bool Level::engineIsActive()

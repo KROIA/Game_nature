@@ -29,15 +29,14 @@ void user_tick_loop(float tickInterval,unsigned long long tick);
 void user_draw_loop(float tickInterval,unsigned long long tick);
 void userEventLoop(float tickInterval,unsigned long long tick);*/
 
+#define DELETEPTR(obj) if(obj!=nullptr){delete obj; obj = nullptr;}
+
 void testDisplay();
 Sprite *loadImage(const string &image);
 
 int main(int argc, char *argv[])
 {
 
-
-
-   //testDisplay(); return 1;
 
     EASY_PROFILER_ENABLE;
     EASY_MAIN_THREAD;

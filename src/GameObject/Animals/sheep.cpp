@@ -208,7 +208,7 @@ void Sheep::checkEvent()
                     detectedObjList[i]->setProperty(p);
 
                     if(p.getFood().foodAmount < 0.01)
-                        detectedObjList[i]->deleteMeFromEngine();
+                        detectedObjList[i]->removeMeFromEngine();
 
                     //qDebug() << sheepProperty.toString().c_str();
                     //qDebug() << p.toString().c_str();

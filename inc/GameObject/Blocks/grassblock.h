@@ -40,7 +40,7 @@ class GrassBlock : public Block
             Block::checkEvent();
             if(m_property.getFood().foodAmount == 0)
             {
-                GameObject::deleteMeFromEngine();
+                GameObject::removeMeFromEngine();
             }
         }
 };
