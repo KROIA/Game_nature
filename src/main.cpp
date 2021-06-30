@@ -37,6 +37,7 @@ Sprite *loadImage(const string &image);
 int main(int argc, char *argv[])
 {
 
+    //testDisplay();
 
     EASY_PROFILER_ENABLE;
     EASY_MAIN_THREAD;
@@ -73,7 +74,11 @@ void testDisplay()
     Vector2u  windowSize(1900*displayScale,1000*displayScale);
     PixelDisplay display(windowSize,Vector2u (mapWidth,float(mapWidth)*float(windowSize.y)/float(windowSize.x)));
 
+    RectF rect(0,0,2,1);
+    rect.rotate(Vector2f(0,0),45);
 
+    display.addVertexLine(rect.getDrawable());
+    display.display();
 
 
     auto blocks_count = profiler::dumpBlocksToFile("profiler.prof");
