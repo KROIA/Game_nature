@@ -62,9 +62,9 @@ void Level::setup_engine()
     qDebug() << "setup_engine";
     m_engine = new PixelEngine (Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x)),m_windowSize);
 
-    m_engine->set_setting_checkEventInterval(1.0f/20.0f);
-    m_engine->set_setting_gameTickInterval(1.0f/20.0f);
-    m_engine->set_setting_displayInterval(1.0f/20.0f);
+    m_engine->set_setting_checkEventInterval(1.0f/30.0f);
+    m_engine->set_setting_gameTickInterval(1.0f/120.0f);
+    m_engine->set_setting_displayInterval(1.0f/60.0f);
 
     m_engine->setUserTickLoop(Level::userTickLoop);
     m_engine->setUserDisplayLoop(Level::userDrawLoop);
@@ -164,7 +164,7 @@ void Level::setup_level()
     Property::Property p;
     p.setBody_material(Property::Material::Stone);
     obsticle->setProperty(p);
-    obsticle->setHitboxVisibility(true);
+    obsticle->showHitbox(true);
 
 #endif
 
@@ -263,8 +263,8 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick)
         // Toggle hitbox visualisation
 
         m_hitboxIsVisible = !m_hitboxIsVisible;
-        //m_sheep->setHitboxVisibility(m_hitboxIsVisible);
-        m_hitboxObjectList->setHitboxVisibility(m_hitboxIsVisible);
+        //m_sheep->showHitbox(m_hitboxIsVisible);
+        m_hitboxObjectList->showHitbox(m_hitboxIsVisible);
         //getchar();
     }
 #ifndef CLEAR_LEVEL

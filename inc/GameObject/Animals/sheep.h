@@ -32,7 +32,9 @@ class Sheep     : public GameObject
 
         virtual void event_hasCollision(vector<GameObject *> other);
 
-        virtual void setHitboxVisibility(const bool &isVisible);
+        virtual void showHitbox(const bool &isVisible);
+
+        virtual void rotate(const float &deg);
 
     protected:
         virtual void setupProperty();

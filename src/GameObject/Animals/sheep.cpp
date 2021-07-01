@@ -16,7 +16,9 @@ Sheep::Sheep()
     setTexturePathList(TexturePath::Animal::sheep);
 
     m_texturePainter->setTexture(m_texture);
-     GameObject::setHitboxFromTexture(*m_texture);
+
+    //m_collider->addHitbox(RectF(-20,-20,40,40));
+    GameObject::setHitboxFromTexture(*m_texture);
 #endif
 
 
@@ -150,8 +152,7 @@ void Sheep::checkEvent()
     if(m_eventLEFT->isPressed())
     {
 
-        m_controller->setRotation(m_controller->getRotation()-deltaDeg);
-        //m_texture->rotate(-45);
+        /*m_controller->setRotation(m_controller->getRotation()-deltaDeg);
 #ifdef USE_ANIMATED_TEXTURE
         m_animatedTexture->selectBackward();
         GameObject::setHitboxFromTexture(*m_animatedTexture);
@@ -159,11 +160,12 @@ void Sheep::checkEvent()
         m_texturePainter->rotate(-deltaDeg);
 #endif
 
-        m_sensor->setRotation(m_controller->getRotation());
+        m_sensor->setRotation(m_controller->getRotation());*/
+        this->rotate(-deltaDeg);
     }
     if(m_eventRIGHT->isPressed())
     {
-        m_controller->setRotation(m_controller->getRotation()+deltaDeg);
+        /*m_controller->setRotation(m_controller->getRotation()+deltaDeg);
         //m_texture->rotate(45);
 #ifdef USE_ANIMATED_TEXTURE
         m_animatedTexture->selectForward();
@@ -172,7 +174,8 @@ void Sheep::checkEvent()
         m_texturePainter->rotate(deltaDeg);
 #endif
 
-        m_sensor->setRotation(m_controller->getRotation());
+        m_sensor->setRotation(m_controller->getRotation());*/
+        this->rotate(deltaDeg);
     }
 
     if(m_event_EAT->isSinking())
@@ -311,10 +314,15 @@ void Sheep::event_hasCollision(vector<GameObject *> other)
     }
 
 }
-void Sheep::setHitboxVisibility(const bool &isVisible)
+void Sheep::showHitbox(const bool &isVisible)
 {
-    GameObject::setHitboxVisibility(isVisible);
+    GameObject::showHitbox(isVisible);
     m_sensor->showBoundingBox(isVisible);
+}
+void Sheep::rotate(const float &deg)
+{
+    m_sensor->rotate(deg);
+    GameObject::rotate(deg);
 }
 void Sheep::setupProperty()
 {
