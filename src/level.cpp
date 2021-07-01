@@ -62,9 +62,9 @@ void Level::setup_engine()
     qDebug() << "setup_engine";
     m_engine = new PixelEngine (Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x)),m_windowSize);
 
-    m_engine->set_setting_checkEventInterval(1.0f/30.0f);
-    m_engine->set_setting_gameTickInterval(1.0f/120.0f);
-    m_engine->set_setting_displayInterval(1.0f/50.0f);
+    m_engine->set_setting_checkEventInterval(1.0f/20.0f);
+    m_engine->set_setting_gameTickInterval(1.0f/20.0f);
+    m_engine->set_setting_displayInterval(1.0f/20.0f);
 
     m_engine->setUserTickLoop(Level::userTickLoop);
     m_engine->setUserDisplayLoop(Level::userDrawLoop);
@@ -233,9 +233,10 @@ void Level::run()
     m_engine->checkEvent();
     m_engine->tick();
     m_engine->display();
-
-   // if(m_engine->getTick() > 10)
-   //    m_engine->stop();
+#ifdef BUILD_WITH_EASY_PROFILER
+    if(m_engine->getTick() > 10)
+       m_engine->stop();
+#endif
 }
 // Is used to chech if the window was closed
 bool Level::engineIsActive()
