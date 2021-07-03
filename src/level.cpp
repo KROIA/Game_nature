@@ -1,6 +1,6 @@
 #include "level.h"
 //#define GLOBALVIEW
-//#define CLEAR_LEVEL
+#define CLEAR_LEVEL
 
 // Engine object
 PixelEngine         *Level::m_engine;
@@ -142,7 +142,7 @@ void Level::setup_level()
     m_hitboxObjectList = new GameObjectGroup();
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPos(Vector2i(150,50));
+    m_sheep->setPosInital(Vector2f(150,50));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -160,7 +160,7 @@ void Level::setup_level()
     obsticleCollider->updateBoundingBox();
     obsticle->setCollider(obsticleCollider);
     obsticle->setPainter(obsticleTexturePainter);
-    obsticle->setPos(50,50);
+    obsticle->setPosInital(Vector2f(50,50));
     Property::Property p;
     p.setBody_material(Property::Material::Stone);
     obsticle->setProperty(p);
