@@ -13,7 +13,8 @@ class DirtBlock : public Block
             Property::Body body;
             Property::Food food;
 
-            Block::setTexturePath(TexturePath::Block::dirt);
+            //Block::setTexturePath(TexturePath::Block::dirt);
+            Block::setTexture(m_textureList[1]);
 
             type.description        = Property::Description::staticObstacle;
 

@@ -10,18 +10,20 @@ class Grass     : public GameObject
         Grass(unsigned int variation = 0)
             :   GameObject()
         {
-            m_texture           = new Texture();
-            m_texturePainter    = new TexturePainter();
-
             if(variation >= TexturePath::Plant::grass.size())
                 variation = 0;
+            if(m_textureList.size() == 0)
+            {
+                m_textureList.reserve(TexturePath::Plant::grass.size());
+                for(size_t i=0; i<TexturePath::Plant::grass.size(); i++)
+                {
+                    m_textureList.push_back(new Texture());
+                    m_textureList[i]->loadTexture(TexturePath::Plant::grass[i]);
+                }
+            }
+            m_texturePainter    = new TexturePainter();
 
-
-            m_texture->loadTexture(TexturePath::Plant::grass[variation]);
-            //GameObject::setTexturePath(TexturePath::Plant::grass[variation]);
-            //GameObject::loadTexture();
-            //GameObject::setTextureOnPainter();
-            RectI boundingBox = RectI::getFrame(m_texture->getRects());
+            RectI boundingBox = RectI::getFrame(m_textureList[variation]->getRects());
             GameObject::addHitbox(boundingBox);
 
 
@@ -29,7 +31,6 @@ class Grass     : public GameObject
             Property::Body body;
             Property::Food food;
 
-            //GameObject::setTexturePath(TexturePath::Block::grass);
 
             type.description        = Property::Description::staticObstacle;
 
@@ -49,7 +50,7 @@ class Grass     : public GameObject
 
             GameObject::setProperty(property);
 
-            m_texturePainter->setTexture(m_texture);
+            m_texturePainter->setTexture(new Texture(*m_textureList[variation]));
             GameObject::setPainter(m_texturePainter);
 
         }
@@ -57,7 +58,7 @@ class Grass     : public GameObject
         ~Grass(){};
 
     protected:
-        Texture *m_texture;
+        static vector<Texture*> m_textureList;
         TexturePainter *m_texturePainter;
     private:
 

@@ -34,16 +34,19 @@ class Block     : public GameObject
         virtual const Vector2u  &getSize();
 
         virtual void setTexturePath(const string &path);
+        virtual void setTexture(Texture *texture);
 
         virtual void setProperty(const Property::Property &property);
         virtual const Property::Property &getProperty() const;
 
     protected:
         virtual void setup_collider();
+        virtual void loadTextures();
 
         Vector2u  m_size;
         Texture         *m_texture;
         TexturePainter  *m_texturePainter;
+        static vector<Texture*> m_textureList;
     private:
 
 };

@@ -1,8 +1,10 @@
 #include "block.h"
 
+vector<Texture*> Block::m_textureList;
 Block::Block(const Vector2u  &size)
     :   GameObject()
 {
+    loadTextures();
     m_size = size;
     m_texturePainter    = new TexturePainter();
     m_texture           = new Texture();
@@ -16,6 +18,7 @@ Block::Block(const Vector2u  &size,
              const Property::Property &property)
     :   GameObject()
 {
+    loadTextures();
     m_size = size;
     m_texturePainter = new TexturePainter();
     m_texture        = new Texture();
@@ -108,6 +111,10 @@ void Block::setTexturePath(const string &path)
 
 
 }
+void Block::setTexture(Texture *texture)
+{
+    *m_texture = *texture;
+}
 
 void Block::setProperty(const Property::Property &property)
 {
@@ -128,5 +135,17 @@ void Block::setup_collider()
   //  GameObject::addHitbox(RectI(m_size.getX(),m_size.getY()));
     RectI boundingBox = RectI::getFrame(m_texture->getRects());
     GameObject::addHitbox(boundingBox);
+}
+void Block::loadTextures()
+{
+    if(m_textureList.size() == 0)
+    {
+        m_textureList.reserve(TexturePath::Block::block.size());
+        for(size_t i=0; i<TexturePath::Block::block.size(); i++)
+        {
+            m_textureList.push_back(new Texture());
+            m_textureList[i]->loadTexture(TexturePath::Block::block[i]);
+        }
+    }
 }
 

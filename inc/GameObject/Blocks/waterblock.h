@@ -13,7 +13,8 @@ class WaterBlock : public Block
             Property::Body body;
             Property::Food food;
 
-            Block::setTexturePath(TexturePath::Block::water);
+            //Block::setTexturePath(TexturePath::Block::water);
+            Block::setTexture(m_textureList[4]);
 
             type.description        = Property::Description::staticObstacle;
 

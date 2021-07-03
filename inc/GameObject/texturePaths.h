@@ -21,6 +21,12 @@ namespace TexturePath
         const string stone  = textureBaseBlockPath+"\\stone"+fileEnding;
         const string sand   = textureBaseBlockPath+"\\sand"+fileEnding;
         const string water  = textureBaseBlockPath+"\\water\\water_0"+fileEnding;
+
+        const vector<string> block = { textureBaseBlockPath + "\\grass_block_top"+fileEnding,
+                                       textureBaseBlockPath + "\\coarse_dirt"+fileEnding,
+                                       textureBaseBlockPath + "\\stone"+fileEnding,
+                                       textureBaseBlockPath + "\\sand"+fileEnding,
+                                       textureBaseBlockPath + "\\water\\water_0"+fileEnding};
     };
 
     namespace Animal {

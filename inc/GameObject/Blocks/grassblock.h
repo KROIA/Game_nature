@@ -13,7 +13,8 @@ class GrassBlock : public Block
             Property::Body body;
             Property::Food food;
 
-            Block::setTexturePath(TexturePath::Block::grass);
+            //Block::setTexturePath(TexturePath::Block::grass);
+            Block::setTexture(m_textureList[0]);
 
             type.description        = Property::Description::staticObstacle;
 

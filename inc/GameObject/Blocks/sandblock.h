@@ -13,7 +13,8 @@ class SandBlock : public Block
             Property::Body body;
             Property::Food food;
 
-            Block::setTexturePath(TexturePath::Block::sand);
+            //Block::setTexturePath(TexturePath::Block::sand);
+            Block::setTexture(m_textureList[3]);
 
             type.description        = Property::Description::staticObstacle;
 

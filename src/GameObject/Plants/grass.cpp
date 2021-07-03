@@ -1,13 +1,5 @@
-/*#include "grass.h"
+#include "grass.h"
+#include "flower.h"
 
-Grass::Grass(unsigned int variation)
-    :   GameObject()
-{
-
-}
-
-Grass::~Grass()
-{
-
-}
-*/
+vector<Texture*> Grass::m_textureList;
+vector<Texture*> Flower::m_textureList;

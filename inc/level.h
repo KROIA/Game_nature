@@ -59,7 +59,7 @@ class Level
 
 //========================================================
         // Put your private function declarations here:
-        static ManagedGameObjectGroup *factory_terain(RectU area);
+        static GameObjectGroup *factory_terain(RectU area);
         static void regenerateGrassField();
         static bool colorInRange(const Color &col1,const Color &col2,unsigned int range=20);
 
@@ -78,14 +78,14 @@ class Level
 
         // Toggle Hitbox of all objects in the list: hitboxObjectList
         static Event               *m_keyEvent_H;
-        static ManagedGameObjectGroup     *m_terainGroup;
-        static ManagedGameObjectGroup     *m_hitboxObjectList;
+        static GameObjectGroup     *m_terainGroup;
+        static GameObjectGroup     *m_hitboxObjectList;
         static bool                 m_hitboxIsVisible;
         static Timer                m_timer1;
         static Sheep               *m_sheep;
         static Vector2i               m_windowMidlePoint;
 
-        static ManagedGameObjectGroup     *m_grassList;
+        static GameObjectGroup     *m_grassList;
         static unsigned int         m_maxGrassAmount;
 
         // TESTS

@@ -321,8 +321,8 @@ void Sheep::showHitbox(const bool &isVisible)
 }
 void Sheep::rotate(const float &deg)
 {
-    m_sensor->rotate(deg);
     GameObject::rotate(deg);
+    m_sensor->setRotation(GameObject::getRotation());
 }
 void Sheep::setupProperty()
 {

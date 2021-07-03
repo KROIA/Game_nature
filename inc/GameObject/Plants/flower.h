@@ -10,25 +10,25 @@ class Flower     : public GameObject
         Flower(unsigned int variation = 0)
             :   GameObject()
         {
-            m_texture           = new Texture();
-            m_texturePainter    = new TexturePainter();
-
             if(variation >= TexturePath::Plant::flower.size())
                 variation = 0;
+            if(m_textureList.size() == 0)
+            {
+                m_textureList.reserve(TexturePath::Plant::flower.size());
+                for(size_t i=0; i<TexturePath::Plant::flower.size(); i++)
+                {
+                    m_textureList.push_back(new Texture());
+                    m_textureList[i]->loadTexture(TexturePath::Plant::flower[i]);
+                }
+            }
+            m_texturePainter    = new TexturePainter();
 
-            m_texture->loadTexture(TexturePath::Plant::flower[variation]);
-
-            //GameObject::setTexturePath(TexturePath::Plant::flower[variation]);
-            //GameObject::loadTexture();
-            //GameObject::setTextureOnPainter();
-            RectI boundingBox = RectI::getFrame(m_texture->getRects());
+            RectI boundingBox = RectI::getFrame(m_textureList[variation]->getRects());
             GameObject::addHitbox(boundingBox);
 
             Property::Type type;
             Property::Body body;
             Property::Food food;
-
-            //GameObject::setTexturePath(TexturePath::Block::grass);
 
             type.description        = Property::Description::staticObstacle;
 
@@ -48,17 +48,19 @@ class Flower     : public GameObject
 
             GameObject::setProperty(property);
 
-            m_texturePainter->setTexture(m_texture);
+            m_texturePainter->setTexture(new Texture(*m_textureList[variation]));
             GameObject::setPainter(m_texturePainter);
 
         }
 
-        ~Flower(){ delete m_texture; };
+        ~Flower(){};
 
     protected:
-        Texture *m_texture;
+        static vector<Texture*> m_textureList;
         TexturePainter *m_texturePainter;
+
     private:
 
 };
+
 #endif // FLOWER_H

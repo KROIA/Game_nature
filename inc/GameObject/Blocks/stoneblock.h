@@ -13,7 +13,8 @@ class StoneBlock : public Block
             Property::Body body;
             Property::Food food;
 
-            Block::setTexturePath(TexturePath::Block::stone);
+            //Block::setTexturePath(TexturePath::Block::stone);
+            Block::setTexture(m_textureList[2]);
 
             type.description        = Property::Description::staticObstacle;
 
