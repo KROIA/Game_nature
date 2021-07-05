@@ -28,11 +28,13 @@ class Sheep     : public GameObject
                                    const int &DOWN_KEY,
                                    const int &RIGHT_KEY,
                                    const int &EAT_KEY,
-                                   const int &DISPLAY_PROPERTY_KEY);
+                                   const int &DISPLAY_PROPERTY_KEY,
+                                   const int &DISPLAY_COLLIDER_KEY,
+                                   const int &DISPLAY_CHUNK_KEY);
 
         virtual void event_hasCollision(vector<GameObject *> other);
 
-        virtual void showHitbox(const bool &isVisible);
+        virtual void setVisibility_collider_hitbox(bool isVisible);
 
         virtual void rotate(const float &deg);
 
@@ -54,6 +56,8 @@ class Sheep     : public GameObject
         Event           *m_eventRIGHT;  // Rotate right
         Event           *m_event_EAT;   // Eat with key "E"
         Event           *m_eventToggleStats; // Q
+        Event           *m_eventToggleColliderVisibility; // C
+        Event           *m_eventToggleChunkVisibility; // M
 
         Timer           m_debugTimer;
 
@@ -62,6 +66,7 @@ class Sheep     : public GameObject
     private:
 
         Timer           m_slowTimer;
+        ChunkID         m_lastChunkID;
 
 };
 #endif

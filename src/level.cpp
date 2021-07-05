@@ -19,7 +19,7 @@ Event               *Level::m_keyEvent_P;
 Event               *Level::m_keyEvent_H;
 GameObjectGroup     *Level::m_terainGroup;
 GameObjectGroup     *Level::m_hitboxObjectList;
-bool                 Level::m_hitboxIsVisible;
+bool                 Level::m_visibility_collider_hitbox;
 Timer                Level::m_timer1;
 Sheep               *Level::m_sheep;
 Vector2i               Level::m_windowMidlePoint;
@@ -126,7 +126,7 @@ void Level::setup_level()
 
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPos(Vector2f(150,50));
+    m_sheep->setPos(Vector2f(11+128.5,18+128.5));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -164,7 +164,7 @@ void Level::setup_level()
     Property::Property p;
     p.setBody_material(Property::Material::Stone);
     obsticle->setProperty(p);
-    obsticle->showHitbox(true);
+    obsticle->setVisibility_collider_hitbox(true);
 
 #endif
 
@@ -173,7 +173,7 @@ void Level::setup_level()
 #ifndef CLEAR_LEVEL
     //m_hitboxObjectList->add(m_terainGroup);
     qDebug() << "add to m_hitboxObjectList";
-    m_hitboxObjectList->add(m_grassList);
+    //m_hitboxObjectList->add(m_grassList);
     m_hitboxObjectList->add(m_sheep);
 #else
     m_hitboxObjectList->add(m_sheep);
@@ -258,13 +258,13 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick)
         m_engine->display_stats(!m_engine->display_stats(),Color(200,200,200),Vector2i(0,5));
     }
 
-    if(m_keyEvent_H->isSinking() || m_engine->getTick() == 50)
+    if(m_keyEvent_H->isSinking())
     {
         // Toggle hitbox visualisation
 
-        m_hitboxIsVisible = !m_hitboxIsVisible;
-        //m_sheep->showHitbox(m_hitboxIsVisible);
-        m_hitboxObjectList->showHitbox(m_hitboxIsVisible);
+        m_visibility_collider_hitbox = !m_visibility_collider_hitbox;
+        //m_sheep->setVisibility_collider_hitbox(m_visibility_collider_hitbox);
+        m_hitboxObjectList->setVisibility_collider_hitbox(m_visibility_collider_hitbox);
         //getchar();
     }
 #ifndef CLEAR_LEVEL

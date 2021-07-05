@@ -80,7 +80,7 @@ class Level
         static Event               *m_keyEvent_H;
         static GameObjectGroup     *m_terainGroup;
         static GameObjectGroup     *m_hitboxObjectList;
-        static bool                 m_hitboxIsVisible;
+        static bool                 m_visibility_collider_hitbox;
         static Timer                m_timer1;
         static Sheep               *m_sheep;
         static Vector2i               m_windowMidlePoint;

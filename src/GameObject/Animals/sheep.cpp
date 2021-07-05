@@ -29,6 +29,8 @@ Sheep::Sheep()
     m_eventRIGHT        = new Event();
     m_event_EAT         = new Event();
     m_eventToggleStats  = new Event();
+    m_eventToggleColliderVisibility = new Event();
+    m_eventToggleChunkVisibility    = new Event();
 
     m_propertyText         = new DisplayText();
 
@@ -50,7 +52,8 @@ Sheep::Sheep()
 
     setKeyBinding(KEYBOARD_KEY_W, KEYBOARD_KEY_A,
                   KEYBOARD_KEY_S, KEYBOARD_KEY_D,
-                  KEYBOARD_KEY_E, KEYBOARD_KEY_Q);
+                  KEYBOARD_KEY_E, KEYBOARD_KEY_Q,
+                  KEYBOARD_KEY_C, KEYBOARD_KEY_M);
 
     m_sensor->setOwner(this);
     Collider *sensorCollider = new Collider();
@@ -83,6 +86,8 @@ Sheep::Sheep(const Sheep &other)
     m_eventRIGHT        = new Event();
     m_event_EAT         = new Event();
     m_eventToggleStats  = new Event();
+    m_eventToggleColliderVisibility = new Event();
+    m_eventToggleChunkVisibility    = new Event();
 
     m_propertyText         = new DisplayText();
     m_texturePainter    = new TexturePainter();
@@ -119,6 +124,7 @@ Sheep::~Sheep()
     delete m_eventRIGHT;
     delete m_event_EAT;
     delete m_eventToggleStats;
+    delete m_eventToggleColliderVisibility;
 }
 
 void Sheep::checkEvent()
@@ -128,6 +134,8 @@ void Sheep::checkEvent()
     m_eventRIGHT->checkEvent();
     m_event_EAT->checkEvent();
     m_eventToggleStats->checkEvent();
+    m_eventToggleColliderVisibility->checkEvent();
+    m_eventToggleChunkVisibility->checkEvent();
 
     if(Vector::length(m_controller->getMovingVector()) > 0)
     {
@@ -231,6 +239,41 @@ void Sheep::checkEvent()
     {
         m_propertyText->setVisibility(!m_propertyText->isVisible());
     }
+    if(m_eventToggleColliderVisibility->isSinking())
+    {
+        bool isVisible = !GameObject::isVisible_collider_hitbox();
+        GameObject::setVisibility_collider_hitbox(isVisible);
+        GameObject::setVisibility_collider_boundingBox(isVisible);
+        GameObject::setVisibility_collider_collisionData(isVisible);
+        GameObject::setVisibility_collider_isCollidingWith(isVisible);
+    }
+
+    if(m_chunkID != m_lastChunkID)
+    {
+        if(m_lastChunkID.isInChunkMap && m_eventToggleChunkVisibility->getCounter_isSinking() == 1)
+        {
+            GameObject::setVisibility_chunk(m_lastChunkID,false);
+            GameObject::setVisibility_chunk(m_chunkID,true);
+        }
+        m_lastChunkID = m_chunkID;
+    }
+    if(m_eventToggleChunkVisibility->isSinking())
+    {
+
+        switch(m_eventToggleChunkVisibility->getCounter_isSinking())
+        {
+            case 1:
+                GameObject::setVisibility_chunk(m_lastChunkID,true);
+            break;
+            case 2:
+                GameObject::setVisibility_chunks(true);
+            break;
+            case 3:
+                GameObject::setVisibility_chunks(false);
+                m_eventToggleChunkVisibility->resetCounter_isSinking();
+            break;
+        }
+    }
 }
 
 /*void Sheep::tick(const Vector2i&direction)
@@ -288,7 +331,9 @@ void Sheep::setKeyBinding(const int &UP_KEY,
                           const int &DOWN_KEY,
                           const int &RIGHT_KEY,
                           const int &EAT_KEY,
-                          const int &DISPLAY_PROPERTY_KEY)
+                          const int &DISPLAY_PROPERTY_KEY,
+                          const int &DISPLAY_COLLIDER_KEY,
+                          const int &DISPLAY_CHUNK_KEY)
 {
     m_controller->setKey_forMove_UP(UP_KEY);
    // m_controller->setKey_forMove_LEFT(m_keyLEFT);
@@ -299,6 +344,8 @@ void Sheep::setKeyBinding(const int &UP_KEY,
     m_eventRIGHT->setKey(RIGHT_KEY);
     m_event_EAT->setKey(EAT_KEY);
     m_eventToggleStats->setKey(DISPLAY_PROPERTY_KEY);
+    m_eventToggleColliderVisibility->setKey(DISPLAY_COLLIDER_KEY);
+    m_eventToggleChunkVisibility->setKey(DISPLAY_CHUNK_KEY);
 }
 void Sheep::event_hasCollision(vector<GameObject *> other)
 {
@@ -314,9 +361,9 @@ void Sheep::event_hasCollision(vector<GameObject *> other)
     }
 
 }
-void Sheep::showHitbox(const bool &isVisible)
+void Sheep::setVisibility_collider_hitbox(bool isVisible)
 {
-    GameObject::showHitbox(isVisible);
+    GameObject::setVisibility_collider_hitbox(isVisible);
     m_sensor->showBoundingBox(isVisible);
 }
 void Sheep::rotate(const float &deg)

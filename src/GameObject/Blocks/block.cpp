@@ -42,6 +42,7 @@ const Block &Block::operator=(const Block &other)
     this->m_size    = other.m_size;
     return *this;
 }
+
 void Block::setPos(int x, int y)
 {
     GameObject::setPos(x,y);
