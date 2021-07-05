@@ -1,6 +1,6 @@
 #include "level.h"
 //#define GLOBALVIEW
-#define CLEAR_LEVEL
+//#define CLEAR_LEVEL
 
 // Engine object
 PixelEngine         *Level::m_engine;
