@@ -21,6 +21,7 @@ class Grass     : public GameObject
                     m_textureList[i]->loadTexture(TexturePath::Plant::grass[i]);
                 }
             }
+            EASY_BLOCK("Grass()",profiler::colors::Gold);
             m_texturePainter    = new TexturePainter();
 
             RectI boundingBox = RectI::getFrame(m_textureList[variation]->getRects());
@@ -49,8 +50,9 @@ class Grass     : public GameObject
             property.setFood(food);
 
             GameObject::setProperty(property);
-
-            m_texturePainter->setTexture(new Texture(*m_textureList[variation]));
+            EASY_BLOCK("setTexture()",profiler::colors::Gold);
+            m_texturePainter->setTexture(m_textureList[variation]);
+            EASY_END_BLOCK;
             GameObject::setPainter(m_texturePainter);
 
         }

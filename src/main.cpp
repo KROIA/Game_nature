@@ -55,7 +55,12 @@ int main(int argc, char *argv[])
     EASY_BLOCK("while",profiler::colors::Amber100);
     while(game.engineIsActive())
     {
-        game.run();
+        try {
+            game.run();
+        }  catch (...) {
+            qDebug() << "error occured";
+        }
+
     }
     EASY_END_BLOCK;
     EASY_BLOCK("cleanup");

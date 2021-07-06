@@ -4,14 +4,15 @@ vector<Texture*> Block::m_textureList;
 Block::Block(const Vector2u  &size)
     :   GameObject()
 {
+    EASY_BLOCK("Block()",profiler::colors::Gold);
     loadTextures();
     m_size = size;
     m_texturePainter    = new TexturePainter();
-    m_texture           = new Texture();
+    //m_texture           = new Texture();
 
-    m_texturePainter->setTexture(m_texture);
+
     GameObject::setPainter(m_texturePainter);
-    m_texturePainter->setOriginType(Origin::topLeft);
+    //m_texturePainter->setOriginType(Origin::topLeft);
     //this->setup_collider();
 }
 Block::Block(const Vector2u  &size,
@@ -22,7 +23,7 @@ Block::Block(const Vector2u  &size,
     loadTextures();
     m_size = size;
     m_texturePainter = new TexturePainter();
-    m_texture        = new Texture();
+    //m_texture        = new Texture();
     GameObject::setPainter(m_texturePainter);
     this->setTexturePath(texturePath);
     this->setProperty(property);
@@ -106,7 +107,7 @@ const Vector2u  &Block::getSize()
 
 void Block::setTexturePath(const string &path)
 {
-    m_texture->loadTexture(path);
+    //m_texture->loadTexture(path);
    // GameObject::setTexturePath(path);
    // GameObject::loadTexture();
    // GameObject::setTextureOnPainter();
@@ -115,7 +116,8 @@ void Block::setTexturePath(const string &path)
 }
 void Block::setTexture(Texture *texture)
 {
-    *m_texture = *texture;
+    m_texture = texture;
+    m_texturePainter->setTexture(m_texture);
 }
 
 void Block::setProperty(const Property::Property &property)

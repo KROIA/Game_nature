@@ -54,7 +54,9 @@ void Level::setup()
     setup_engine();
     setup_level();
     setup_keyEvent();
+
     m_levelBuilt = true;
+
 }
 // Setup for the engine
 void Level::setup_engine()
@@ -183,10 +185,11 @@ void Level::setup_level()
 
 #ifndef CLEAR_LEVEL
     qDebug() << "add to engine";
-    m_engine->addGameObject(m_sheep);
+
     m_engine->addGameObject(m_terainGroup);
     m_engine->addGameObject(m_grassList);
     m_engine->addGameObject(m_hitboxObjectList);
+    m_engine->addGameObject(m_sheep);
 #else
     m_engine->addGameObject(m_hitboxObjectList);
     // m_engine->addGameObject(m_testObj);
@@ -197,7 +200,7 @@ void Level::setup_level()
 #endif
 
 
-
+    m_engine->setup();
 
 #ifndef CLEAR_LEVEL
   //  m_engine->setCollisionSingleInteraction(m_sheep,m_terainGroup);
@@ -255,7 +258,7 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick)
     if(m_keyEvent_P->isSinking())
     {
         // Toggle stats visualisation
-        m_engine->display_stats(!m_engine->display_stats(),Color(200,200,200),Vector2i(0,5));
+        m_engine->display_stats(!m_engine->display_stats(),Color(200,200,200),Vector2i(0,0));
     }
 
     if(m_keyEvent_H->isSinking())
@@ -401,7 +404,8 @@ void Level::regenerateGrassField()
         }
     }
     m_grassList->reserve(m_maxGrassAmount);
-
+    int percent = 0;
+    int lastPercent =0;
     while(m_grassList->size() < m_maxGrassAmount)
     {
         EASY_BLOCK("while(m_grassList->size() < m_maxGrassAmount)",profiler::colors::Amber);
@@ -414,6 +418,7 @@ void Level::regenerateGrassField()
         // Get random generated Plant
         GameObject *plant;
         int randPlant = PixelEngine::randomL(0,100);
+        EASY_BLOCK("new OBJ",profiler::colors::Amber100);
         if(randPlant > 80)
         {
            // qDebug() << "Generate Flower";
@@ -425,6 +430,7 @@ void Level::regenerateGrassField()
             plant = new Grass(PixelEngine::random(0,TexturePath::Plant::grass.size()-1));
         }
        // qDebug() << "setPos";
+        EASY_END_BLOCK;
         plant->setPos(grassBlockGroup[randBlock]->getPos()+Vector2f(PixelEngine::random(-8,8),PixelEngine::random(-8,8)));
 
 
@@ -432,7 +438,13 @@ void Level::regenerateGrassField()
       // qDebug() << "add plant: "<<m_grassList->size();
         //m_engine->
         //m_engine->setCollisionSingleInteraction(m_sheep,grass);
-        qDebug() << m_grassList->size()*100/m_maxGrassAmount<< " %";
+        percent = m_grassList->size()*10/m_maxGrassAmount;
+        if(percent != lastPercent)
+        {
+            qDebug() << percent*10 <<" %";
+            lastPercent = percent;
+        }
+      //  qDebug() << m_grassList->size()*100/m_maxGrassAmount<< " %";
     }
 
    // qDebug() << "regenerateGrassField() end";

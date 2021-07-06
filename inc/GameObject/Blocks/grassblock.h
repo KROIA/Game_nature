@@ -9,12 +9,15 @@ class GrassBlock : public Block
         GrassBlock()
             :   Block()
         {
+            EASY_BLOCK("GrassBlock()",profiler::colors::Grey);
             Property::Type type;
             Property::Body body;
             Property::Food food;
 
             //Block::setTexturePath(TexturePath::Block::grass);
+            EASY_BLOCK("setTexture()",profiler::colors::Grey50);
             Block::setTexture(m_textureList[0]);
+            EASY_END_BLOCK;
 
             type.description        = Property::Description::staticObstacle;
 
@@ -31,9 +34,14 @@ class GrassBlock : public Block
             property.setType(type);
             property.setBody(body);
             property.setFood(food);
+            EASY_BLOCK("setProperty()",profiler::colors::Grey50);
 
             Block::setProperty(property);
+            EASY_END_BLOCK;
+            EASY_BLOCK("setup_collider()",profiler::colors::Grey50);
+
             Block::setup_collider();
+            EASY_END_BLOCK;
         }
 
         virtual void checkEvent()
