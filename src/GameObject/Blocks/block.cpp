@@ -11,6 +11,7 @@ Block::Block(const Vector2u  &size)
 
     m_texturePainter->setTexture(m_texture);
     GameObject::setPainter(m_texturePainter);
+    m_texturePainter->setOriginType(Origin::topLeft);
     //this->setup_collider();
 }
 Block::Block(const Vector2u  &size,
@@ -146,6 +147,7 @@ void Block::loadTextures()
         {
             m_textureList.push_back(new Texture());
             m_textureList[i]->loadTexture(TexturePath::Block::block[i]);
+            m_textureList[i]->setOriginType(Origin::topLeft);
         }
     }
 }

@@ -122,11 +122,11 @@ void Level::setup_level()
 
 #ifndef CLEAR_LEVEL
     // Generate random Blocks on Position ( 10 | 10 ) with the size of ( 5 x 4 ) blocks
-    m_terainGroup = factory_terain(RectU(Vector2u (8,8),Vector2u (0,0)));
+    m_terainGroup = factory_terain(RectU(Vector2u (0,0),Vector2u (0,0)));
 
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPos(Vector2f(11+128.5,18+128.5));
+    m_sheep->setPos(Vector2f(150,50));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -173,8 +173,8 @@ void Level::setup_level()
 #ifndef CLEAR_LEVEL
     //m_hitboxObjectList->add(m_terainGroup);
     qDebug() << "add to m_hitboxObjectList";
-    //m_hitboxObjectList->add(m_grassList);
-    m_hitboxObjectList->add(m_sheep);
+    m_hitboxObjectList->add(m_grassList);
+    //m_hitboxObjectList->add(m_sheep);
 #else
     m_hitboxObjectList->add(m_sheep);
 

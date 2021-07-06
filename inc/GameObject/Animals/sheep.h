@@ -34,8 +34,6 @@ class Sheep     : public GameObject
 
         virtual void event_hasCollision(vector<GameObject *> other);
 
-        virtual void setVisibility_collider_hitbox(bool isVisible);
-
         virtual void rotate(const float &deg);
 
     protected:
@@ -66,7 +64,7 @@ class Sheep     : public GameObject
     private:
 
         Timer           m_slowTimer;
-        ChunkID         m_lastChunkID;
+        vector<ChunkID> m_lastChunkIDList;
 
 };
 #endif

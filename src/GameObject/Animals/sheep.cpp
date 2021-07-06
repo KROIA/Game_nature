@@ -58,7 +58,7 @@ Sheep::Sheep()
     m_sensor->setOwner(this);
     Collider *sensorCollider = new Collider();
    // sensorCollider->addHitbox(RectI(-15,-19,30,6));
-    sensorCollider->addHitbox(RectI(-4,-19,9,8));
+    sensorCollider->addHitbox(RectI(-4,-19,8,8));
     sensorCollider->updateBoundingBox();
     m_sensor->setSensorCollider(sensorCollider);
     setupProperty();
@@ -246,16 +246,39 @@ void Sheep::checkEvent()
         GameObject::setVisibility_collider_boundingBox(isVisible);
         GameObject::setVisibility_collider_collisionData(isVisible);
         GameObject::setVisibility_collider_isCollidingWith(isVisible);
+        m_sensor->setVisibility_collider_boundingBox(isVisible);
     }
 
-    if(m_chunkID != m_lastChunkID)
+
+    // Chunk display:
+    bool changeChunk = false;
+    if(m_chunkIDList.size() != m_lastChunkIDList.size())
+        changeChunk = true;
+    else
     {
-        if(m_lastChunkID.isInChunkMap && m_eventToggleChunkVisibility->getCounter_isSinking() == 1)
+        for(size_t i=0; i<m_chunkIDList.size(); i++)
+            if(m_chunkIDList[i] != m_lastChunkIDList[i])
+            {
+                changeChunk = true;
+                break;
+            }
+
+    }
+    if(changeChunk)
+    {
+        /*if(m_lastChunkID.isInChunkMap && m_eventToggleChunkVisibility->getCounter_isSinking() == 1)
         {
             GameObject::setVisibility_chunk(m_lastChunkID,false);
             GameObject::setVisibility_chunk(m_chunkID,true);
+        }*/
+        if(m_eventToggleChunkVisibility->getCounter_isSinking() == 1)
+        {
+            for(const ChunkID &id : m_lastChunkIDList)
+                GameObject::setVisibility_chunk(id,false);
+            for(const ChunkID &id : m_chunkIDList)
+                GameObject::setVisibility_chunk(id,true);
         }
-        m_lastChunkID = m_chunkID;
+        m_lastChunkIDList = m_chunkIDList;
     }
     if(m_eventToggleChunkVisibility->isSinking())
     {
@@ -263,7 +286,8 @@ void Sheep::checkEvent()
         switch(m_eventToggleChunkVisibility->getCounter_isSinking())
         {
             case 1:
-                GameObject::setVisibility_chunk(m_lastChunkID,true);
+                for(const ChunkID &id : m_chunkIDList)
+                    GameObject::setVisibility_chunk(id,true);
             break;
             case 2:
                 GameObject::setVisibility_chunks(true);
@@ -360,11 +384,6 @@ void Sheep::event_hasCollision(vector<GameObject *> other)
             GameObject::event_hasCollision(other);
     }
 
-}
-void Sheep::setVisibility_collider_hitbox(bool isVisible)
-{
-    GameObject::setVisibility_collider_hitbox(isVisible);
-    m_sensor->showBoundingBox(isVisible);
 }
 void Sheep::rotate(const float &deg)
 {
