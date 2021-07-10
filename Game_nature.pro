@@ -10,16 +10,8 @@ CONFIG -= app_bundle
 
 #CONFIG+=BUILD_WITH_EASY_PROFILER
 
-
-CONFIG += USE_ORIGINAL_ENGINE_PATH
-
-USE_ORIGINAL_ENGINE_PATH{
-ENGINE_PATH = ../PixelEngine
-}else{
-ENGINE_PATH = $$PWD/extern/PixelEngine
-}
-include($$ENGINE_PATH/PixelEngine.pri)
-
+include(../PixelEngine/PixelEngine.pri)
+#include($$PWD/extern/PixelEngine.pri)
 
 incPath = inc
 srcPath = src

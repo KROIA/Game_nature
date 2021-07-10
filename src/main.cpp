@@ -29,21 +29,11 @@ void user_tick_loop(float tickInterval,unsigned long long tick);
 void user_draw_loop(float tickInterval,unsigned long long tick);
 void userEventLoop(float tickInterval,unsigned long long tick);*/
 
-#define DELETEPTR(obj) if(obj!=nullptr){delete obj; obj = nullptr;}
-
 void testDisplay();
 Sprite *loadImage(const string &image);
 
 int main(int argc, char *argv[])
 {
-
-    //testDisplay();
-
-    EASY_PROFILER_ENABLE;
-    EASY_MAIN_THREAD;
-
-
-    EASY_BLOCK("Setup",profiler::colors::Amber);
     unsigned int mapWidth   = 16*20; // Width of the Grid, the hight will be calculated depending of the windowSize
     //unsigned int mapWidth   = 200;
     float displayScale     = 0.9;
@@ -63,11 +53,7 @@ int main(int argc, char *argv[])
 
     }
     EASY_END_BLOCK;
-    EASY_BLOCK("cleanup");
     game.cleanup();
-    EASY_END_BLOCK;
-    auto blocks_count = profiler::dumpBlocksToFile("profiler.prof");
-    std::cout << "Profiler blocks count: " << blocks_count << std::endl;
     return 1;
 }
 void testDisplay()

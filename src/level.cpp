@@ -37,6 +37,16 @@ Level::Level(Vector2u  windowSize, unsigned int mapWidth)
     m_windowSize    = windowSize;
     m_mapWidth      = mapWidth;
     m_levelBuilt    = false;
+
+    PixelEngine::Settings settings = PixelEngine::getSettings();
+    settings.display.windowSize = m_windowSize;
+    settings.display.pixelMapSize = Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x));
+    settings.gameObject.chunkMap.chunk.size = Vector2u(128,128);
+    settings.gameObject.chunkMap.chunkMapSize = settings.gameObject.chunkMap.chunk.size * 16u;
+    //settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size) * 8;
+    settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size);
+    PixelEngine::setSettings(settings);
+
     setup();
 }
 Level::~Level()
@@ -62,7 +72,7 @@ void Level::setup()
 void Level::setup_engine()
 {
     qDebug() << "setup_engine";
-    m_engine = new PixelEngine (Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x)),m_windowSize);
+    m_engine = new PixelEngine();
 
     m_engine->set_setting_checkEventInterval(1.0f/30.0f);
     m_engine->set_setting_gameTickInterval(1.0f/120.0f);
@@ -226,7 +236,7 @@ void Level::setup_keyEvent()
 }
 void Level::cleanup()
 {
-
+    delete m_engine;
 }
 
 // Mainloop for the engine
@@ -249,7 +259,7 @@ bool Level::engineIsActive()
 
 // These functions will later be called from the engine
  // userEventLoop: Here you can handle your Events (KeyEvents).
-void Level::userEventLoop(float tickInterval,unsigned long long tick)
+void Level::userEventLoop(float tickInterval,unsigned long long tick,const vector<sf::Event> &eventLsit)
 {
     // Check for keyEvents
     m_keyEvent_P->checkEvent();
@@ -296,7 +306,7 @@ void Level::userTickLoop(float tickInterval,unsigned long long tick)
  // userDrawLoop: If you want to change something on the graphics, do it here.
  // You also can do this stuff in the userTickLoop but you may run the tickLoop faster
  // than you draw stuff, so you will waste performance.
-void Level::userDrawLoop(float tickInterval,unsigned long long tick)
+void Level::userDrawLoop(float tickInterval,unsigned long long tick, PixelDisplay &display)
 {
 
     if(m_timer1.start(0.1))

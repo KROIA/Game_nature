@@ -37,13 +37,13 @@ class Level
 
         // These functions will later be called from the engine
          // userEventLoop: Here you can handle your Events (KeyEvents).
-        static void userEventLoop(float tickInterval,unsigned long long tick);
+        static void userEventLoop(float tickInterval,unsigned long long tick,const vector<sf::Event> &eventLsit);
          // userTickLoop: Here you can manipulate the game.
         static void userTickLoop(float tickInterval,unsigned long long tick);
          // userDrawLoop: If you want to change something on the graphics, do it here.
          // You also can do this stuff in the userTickLoop but you may run the tickLoop faster
          // than you draw stuff, so you will waste performance.
-        static void userDrawLoop(float tickInterval,unsigned long long tick);
+        static void userDrawLoop(float tickInterval,unsigned long long tick,PixelDisplay &display);
 
 //========================================================
         // Put your public function declarations here:
