@@ -250,50 +250,9 @@ void Sheep::checkEvent()
         m_sensor->setVisibility_collider_boundingBox(isVisible);
     }
 
-
-    // Chunk display:
-    bool changeChunk = false;
-    if(m_chunkIDList.size() != m_lastChunkIDList.size())
-        changeChunk = true;
-    else
-    {
-        for(size_t i=0; i<m_chunkIDList.size(); i++)
-            if(m_chunkIDList[i] != m_lastChunkIDList[i])
-            {
-                changeChunk = true;
-                break;
-            }
-
-    }
-    /*if(changeChunk)
-    {
-
-        if(m_eventToggleChunkVisibility->getCounter_isSinking() == 1)
-        {
-            for(const ChunkID &id : m_lastChunkIDList)
-                GameObject::setVisibility_chunk(id,false);
-            for(const ChunkID &id : m_chunkIDList)
-                GameObject::setVisibility_chunk(id,true);
-        }
-        m_lastChunkIDList = m_chunkIDList;
-    }*/
     if(m_eventToggleChunkVisibility->isSinking())
     {
         GameObject::setVisibility_objectTree(!GameObject::isVisible_objectTree());
-        /*switch(m_eventToggleChunkVisibility->getCounter_isSinking())
-        {
-            case 1:
-                for(const ChunkID &id : m_chunkIDList)
-                    GameObject::setVisibility_chunk(id,true);
-            break;
-            case 2:
-                GameObject::setVisibility_chunks(true);
-            break;
-            case 3:
-                GameObject::setVisibility_chunks(false);
-                m_eventToggleChunkVisibility->resetCounter_isSinking();
-            break;
-        }*/
     }
 }
 

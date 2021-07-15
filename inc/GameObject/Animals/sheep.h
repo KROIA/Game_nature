@@ -64,7 +64,6 @@ class Sheep     : public GameObject
     private:
 
         Timer           m_slowTimer;
-        vector<ChunkID> m_lastChunkIDList;
 
 };
 #endif

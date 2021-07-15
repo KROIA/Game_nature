@@ -41,6 +41,8 @@ Level::Level(Vector2u  windowSize, unsigned int mapWidth)
     PixelEngine::Settings settings = PixelEngine::getSettings();
     settings.display.windowSize = m_windowSize;
     settings.display.pixelMapSize = Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x));
+    settings.gameObject.objectTree.maxObjects = 128;
+    settings.gameObject.objectTree.boundry = RectF(-32,-32,204*16,204*16);
     //settings.gameObject.chunkMap.chunk.size = Vector2u(128,128);
     //settings.gameObject.chunkMap.chunkMapSize = settings.gameObject.chunkMap.chunk.size * 16u;
     //settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size) * 8;
@@ -247,6 +249,8 @@ void Level::run()
     m_engine->tick();
     m_engine->display();
 #ifdef BUILD_WITH_EASY_PROFILER
+    if(m_engine->getTick() > 10)
+       m_sheep->rotate(-5);
     if(m_engine->getTick() > 20)
        m_engine->stop();
 #endif
