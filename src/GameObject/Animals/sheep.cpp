@@ -265,13 +265,9 @@ void Sheep::checkEvent()
             }
 
     }
-    if(changeChunk)
+    /*if(changeChunk)
     {
-        /*if(m_lastChunkID.isInChunkMap && m_eventToggleChunkVisibility->getCounter_isSinking() == 1)
-        {
-            GameObject::setVisibility_chunk(m_lastChunkID,false);
-            GameObject::setVisibility_chunk(m_chunkID,true);
-        }*/
+
         if(m_eventToggleChunkVisibility->getCounter_isSinking() == 1)
         {
             for(const ChunkID &id : m_lastChunkIDList)
@@ -280,11 +276,11 @@ void Sheep::checkEvent()
                 GameObject::setVisibility_chunk(id,true);
         }
         m_lastChunkIDList = m_chunkIDList;
-    }
+    }*/
     if(m_eventToggleChunkVisibility->isSinking())
     {
-
-        switch(m_eventToggleChunkVisibility->getCounter_isSinking())
+        GameObject::setVisibility_objectTree(!GameObject::isVisible_objectTree());
+        /*switch(m_eventToggleChunkVisibility->getCounter_isSinking())
         {
             case 1:
                 for(const ChunkID &id : m_chunkIDList)
@@ -297,7 +293,7 @@ void Sheep::checkEvent()
                 GameObject::setVisibility_chunks(false);
                 m_eventToggleChunkVisibility->resetCounter_isSinking();
             break;
-        }
+        }*/
     }
 }
 

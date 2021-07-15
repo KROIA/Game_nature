@@ -41,10 +41,10 @@ Level::Level(Vector2u  windowSize, unsigned int mapWidth)
     PixelEngine::Settings settings = PixelEngine::getSettings();
     settings.display.windowSize = m_windowSize;
     settings.display.pixelMapSize = Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x));
-    settings.gameObject.chunkMap.chunk.size = Vector2u(128,128);
-    settings.gameObject.chunkMap.chunkMapSize = settings.gameObject.chunkMap.chunk.size * 16u;
+    //settings.gameObject.chunkMap.chunk.size = Vector2u(128,128);
+    //settings.gameObject.chunkMap.chunkMapSize = settings.gameObject.chunkMap.chunk.size * 16u;
     //settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size) * 8;
-    settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size);
+    //settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size);
     PixelEngine::setSettings(settings);
 
     setup();
@@ -145,7 +145,7 @@ void Level::setup_level()
     // Generate Grass
     m_maxGrassAmount    = m_terainGroup->size()*1.5;
     m_grassList         = new GameObjectGroup();
-    qDebug() << "regenerateGrassField";
+    qDebug() << "regenerateGrassField: size: "<<m_maxGrassAmount;
     regenerateGrassField();
     qDebug() << "regenerateGrassField done";
 
