@@ -17,7 +17,7 @@ class Player    :   public GameObject
 
         virtual void tick(const Vector2i&direction);
         virtual unsigned int checkCollision(const vector<GameObject*> &other);
-        virtual void draw(PixelDisplay &display);
+//        virtual void draw(PixelDisplay &display);
 
         virtual void setColor(const Color &color);
         virtual void setStartPos(const Vector2i&point);
@@ -44,7 +44,7 @@ class Player    :   public GameObject
 
 
     protected:
-        virtual void setupPLayerBody(Painter *p,Collider *c);
+        virtual void setupPLayerBody(SpritePainter *p,Collider *c);
 
         Color m_playerColor;
         Vector2i m_initalPos;
@@ -58,7 +58,7 @@ class Player    :   public GameObject
         bool m_onceBuild;
         Collider *m_collider;
         Collider *sensorCollider;
-        Painter  *m_painter;
+        SpritePainter  *m_painter;
         KeyController *m_controller;
 
         Sensor m_sensor;

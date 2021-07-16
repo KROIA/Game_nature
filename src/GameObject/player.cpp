@@ -10,7 +10,7 @@ Player::Player()
 
     m_onceBuild  = false;
 
-    m_painter      = new Painter();
+    m_painter      = new SpritePainter();
     m_collider     = new Collider();
     m_controller   = new KeyController();
 
@@ -84,11 +84,11 @@ unsigned int Player::checkCollision(const vector<GameObject*> &other)
     }
     return collisionAmount;
 }
-void Player::draw(PixelDisplay &display)
+/*void Player::draw(PixelDisplay &display)
 {
     GameObject::draw(display);
     m_sensor.draw(display);
-}
+}*/
 void Player::setColor(const Color &color)
 {
     m_playerColor = color;
@@ -145,7 +145,7 @@ void Player::buildPlayer()
 
 }
 
-void Player::setupPLayerBody(Painter *p,Collider *c)
+void Player::setupPLayerBody(SpritePainter *p,Collider *c)
 {
     /**3**0**3*
      *   ###

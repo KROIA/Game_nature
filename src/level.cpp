@@ -117,7 +117,7 @@ void Level::setup_level()
     }
     m_pixPainter->addPixel(size.getX()/2,size.getY()/2,Color(100,255,0));
     m_testObj = new GameObject();
-    m_pixPainter->setOriginType(Painter::Origin::middle);
+    m_pixPainter->setOriginType(SpritePainter::Origin::middle);
     m_testObj->setPainter(m_pixPainter);
     m_testObj->setPos(30,30);
 
@@ -203,7 +203,7 @@ void Level::setup_level()
     m_engine->addGameObject(m_hitboxObjectList);
     m_engine->addGameObject(m_sheep);
 #else
-    m_engine->addGameObject(m_hitboxObjectList);
+    //m_engine->addGameObject(m_hitboxObjectList);
     // m_engine->addGameObject(m_testObj);
     // m_engine->addGameObject(m_testObj2);
     m_engine->addGameObject(m_sheep);
@@ -219,10 +219,14 @@ void Level::setup_level()
     qDebug() << "set interactions";
     m_engine->setCollisionSingleInteraction(m_sheep,m_grassList);
     //m_engine->setRenderLayer_BOTTOM(m_terainGroup);
-    m_engine->setRenderLayer_TOP(m_sheep);
+    //m_engine->setRenderLayer_BOTTOM(m_terainGroup);
+  //  m_engine->moveRenderLayer_UP(m_grassList);
+//    m_engine->moveRenderLayer_UP(m_sheep);
+
+   // m_engine->setLayerVisibility(RenderLayerIndex::vertexPaths,false);
 #else
     m_engine->setCollisionSingleInteraction(m_sheep,obsticle);
-    m_engine->setRenderLayer_TOP(m_sheep);
+    //m_engine->setRenderLayer_TOP(m_sheep);
 
 #endif
 
@@ -249,6 +253,11 @@ void Level::run()
     m_engine->tick();
     m_engine->display();
 #ifdef BUILD_WITH_EASY_PROFILER
+    if(m_engine->getTick() == 10)
+    {
+        m_visibility_collider_hitbox = !m_visibility_collider_hitbox;
+        m_hitboxObjectList->setVisibility_collider_hitbox(m_visibility_collider_hitbox);
+    }
     if(m_engine->getTick() > 10)
        m_sheep->rotate(-5);
     if(m_engine->getTick() > 20)
@@ -388,6 +397,7 @@ GameObjectGroup *Level::factory_terain(RectU area)
                 qDebug() << "not defined field on Map: "<<randomPos.x + x<< " "<<randomPos.y + y;
                 block = new GrassBlock();
             }
+            block->setRenderLayer(RenderLayerIndex::layer_1);
           /*  switch()
             {
                 case 0: block = new DirtBlock(); break;
@@ -446,7 +456,7 @@ void Level::regenerateGrassField()
        // qDebug() << "setPos";
         EASY_END_BLOCK;
         plant->setPos(grassBlockGroup[randBlock]->getPos()+Vector2f(PixelEngine::random(-8,8),PixelEngine::random(-8,8)));
-
+        plant->setRenderLayer(RenderLayerIndex::layer_2);
 
         m_grassList->add(plant);
       // qDebug() << "add plant: "<<m_grassList->size();

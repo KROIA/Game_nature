@@ -16,6 +16,7 @@ Sheep::Sheep()
     setTexturePathList(TexturePath::Animal::sheep);
 
     m_texturePainter->setTexture(m_texture);
+    m_texturePainter->setRenderLayer(RenderLayerIndex::layer_3);
 
     //m_collider->addHitbox(RectF(-20,-20,40,40));
     GameObject::setHitboxFromTexture(*m_texture);
@@ -32,7 +33,7 @@ Sheep::Sheep()
     m_eventToggleColliderVisibility = new Event();
     m_eventToggleChunkVisibility    = new Event();
 
-    m_propertyText         = new DisplayText();
+    m_propertyText         = new TextPainter();
 
 
 
@@ -90,7 +91,7 @@ Sheep::Sheep(const Sheep &other)
     m_eventToggleColliderVisibility = new Event();
     m_eventToggleChunkVisibility    = new Event();
 
-    m_propertyText         = new DisplayText();
+    m_propertyText         = new TextPainter();
     m_texturePainter    = new TexturePainter();
 
     //
@@ -260,13 +261,23 @@ void Sheep::checkEvent()
 {
     GameObject::tick(direction);
 }*/
+void Sheep::postTick()
+{
+    if(m_slowTimer.start(0.5))
+    {
+        updatePropertyText();
+    }
+    if(m_propertyText->isVisible())
+        m_propertyText->setPos(Vector2f(m_layerItem.getPos()) + m_propertyTextRelativePos);
+    GameObject::postTick();
+}
 unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
 {
     unsigned int collisionAmount = GameObject::checkCollision(other);
     m_sensor->checkCollision(other);
     return collisionAmount;
 }
-void Sheep::draw(PixelDisplay &display)
+/*void Sheep::draw(PixelDisplay &display)
 {
     if(m_slowTimer.start(0.5))
     {
@@ -278,7 +289,7 @@ void Sheep::draw(PixelDisplay &display)
     if(m_propertyText->isVisible())
         m_propertyText->setPos(Vector2f(m_layerItem.getPos()) + m_propertyTextRelativePos);
    // if(m_debugTimer.start)
-}
+}*/
 
 void Sheep::setTexturePathList(const vector<string> &pathList)
 {
@@ -297,7 +308,7 @@ void Sheep::setTexturePathList(const vector<string> &pathList)
     {
         m_texture->setFilePath(pathList[0]);
         m_texture->loadTexture();
-        m_texturePainter->setOriginType(Painter::Origin::middle);
+        m_texturePainter->setOriginType(SpritePainter::Origin::middle);
         //m_texture->setOriginType(Texture::Origin::middle);
     }
 

@@ -7,6 +7,7 @@
 #include "texturePaths.h"
 #include "timer.h"
 #include "texturePainter.h"
+#include "textPainter.h"
 
 //#define USE_ANIMATED_TEXTURE
 
@@ -18,9 +19,11 @@ class Sheep     : public GameObject
         virtual ~Sheep();
 
         virtual void checkEvent();
+        //virtual void preTick();
         //virtual void tick(const Vector2i&direction);
+        virtual void postTick();
         virtual unsigned int checkCollision(const vector<GameObject*> &other);
-        virtual void draw(PixelDisplay &display);
+        //virtual void draw(PixelDisplay &display);
 
         virtual void setTexturePathList(const vector<string> &pathList);
         virtual void setKeyBinding(const int &UP_KEY,
@@ -59,7 +62,7 @@ class Sheep     : public GameObject
 
         Timer           m_debugTimer;
 
-        DisplayText    *m_propertyText;
+        TextPainter     *m_propertyText;
         Vector2f         m_propertyTextRelativePos;
     private:
 
