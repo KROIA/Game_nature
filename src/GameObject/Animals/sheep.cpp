@@ -34,13 +34,59 @@ Sheep::Sheep()
     m_eventToggleChunkVisibility    = new Event();
 
     m_propertyText         = new TextPainter();
+}
+Sheep::Sheep(const Sheep &other)
+    :   GameObject(other)
+{
+    m_texturePainter    = new TexturePainter();
+#ifdef USE_ANIMATED_TEXTURE
+    m_animatedTexture   = new AnimatedTexture();
+    *this->m_animatedTexture    = *other.m_animatedTexture;
+    m_texturePainter->setTexture(m_animatedTexture);
+    GameObject::setHitboxFromTexture(*m_animatedTexture);
+#else
+    m_texture           = new Texture();
+    *this->m_texture    = *other.m_texture;
+    m_texturePainter->setTexture(m_texture);
+    m_texturePainter->setRenderLayer(RenderLayerIndex::layer_3);
+    GameObject::setHitboxFromTexture(*m_texture);
+#endif
+    m_sensor            = new Sensor();
+    m_controller        = new KeyController();
+
+    m_eventLEFT         = new Event();
+    m_eventRIGHT        = new Event();
+    m_event_EAT         = new Event();
+    m_eventToggleStats  = new Event();
+    m_eventToggleColliderVisibility = new Event();
+    m_eventToggleChunkVisibility    = new Event();
+
+    m_propertyText      = new TextPainter();
 
 
+    *this->m_sensor             = *other.m_sensor;
+    *this->m_controller         = *other.m_controller;
+    *this->m_eventLEFT          = *other.m_eventLEFT;
+    *this->m_eventRIGHT         = *other.m_eventRIGHT;
+    *this->m_event_EAT          = *other.m_event_EAT;
+    *this->m_eventToggleStats   = *other.m_eventToggleStats;
+    *this->m_propertyText       = *other.m_propertyText;
+}
+Sheep::~Sheep()
+{
+    GameObject::removePainter(m_propertyText);
 
-    GameObject::setPainter(m_texturePainter);
+    delete m_propertyText;
+    delete m_sensor;
+    delete m_eventLEFT;
+    delete m_eventRIGHT;
+    delete m_event_EAT;
+    delete m_eventToggleStats;
+    delete m_eventToggleColliderVisibility;
+}
 
-    GameObject::addController(m_controller);
-
+void Sheep::setup()
+{
     m_propertyText->setVisibility(false);
     m_propertyText->setString("");
     m_propertyText->setCharacterSize(30);
@@ -49,7 +95,6 @@ Sheep::Sheep()
     //m_propertyTextRelativePos = Vector2f(10,0);
     m_propertyText->setPos(m_propertyTextRelativePos);
 
-    GameObject::addText(m_propertyText);
 
 
     setKeyBinding(KEYBOARD_KEY_W, KEYBOARD_KEY_A,
@@ -64,81 +109,22 @@ Sheep::Sheep()
     sensorCollider->updateBoundingBox();
     m_sensor->setSensorCollider(sensorCollider);
     setupProperty();
-
-
-}
-Sheep::Sheep(const Sheep &other)
-    :   GameObject(other)
-{
-#ifdef USE_ANIMATED_TEXTURE
-    m_animatedTexture   = new AnimatedTexture();
-    *this->m_animatedTexture    = *other.m_animatedTexture;
-    m_texturePainter->setTexture(m_animatedTexture);
-    GameObject::setHitboxFromTexture(*m_animatedTexture);
-#else
-    m_texture           = new Texture();
-    *this->m_texture    = *other.m_texture;
-    m_texturePainter->setTexture(m_texture);
-    GameObject::setHitboxFromTexture(*m_texture);
-#endif
-    m_sensor            = new Sensor();
-    m_controller        = new KeyController();
-
-    m_eventLEFT         = new Event();
-    m_eventRIGHT        = new Event();
-    m_event_EAT         = new Event();
-    m_eventToggleStats  = new Event();
-    m_eventToggleColliderVisibility = new Event();
-    m_eventToggleChunkVisibility    = new Event();
-
-    m_propertyText         = new TextPainter();
-    m_texturePainter    = new TexturePainter();
-
-    //
-
-    *this->m_sensor             = *other.m_sensor;
-    *this->m_controller         = *other.m_controller;
-    *this->m_eventLEFT          = *other.m_eventLEFT;
-    *this->m_eventRIGHT         = *other.m_eventRIGHT;
-    *this->m_event_EAT          = *other.m_event_EAT;
-    *this->m_eventToggleStats   = *other.m_eventToggleStats;
-    *this->m_propertyText       = *other.m_propertyText;
-
-    //GameObject::setTexture(m_animatedTexture);
-   // GameObject::setTexture(m_texture);
-
-
+    m_cameraZoom = 0.2;
 
     GameObject::setPainter(m_texturePainter);
     GameObject::clearController();
     GameObject::addController(m_controller);
-    GameObject::addText(m_propertyText);
+    GameObject::addPainter(m_propertyText);
 
-
+    GameObject::addEvent(m_eventLEFT);
+    GameObject::addEvent(m_eventRIGHT);
+    GameObject::addEvent(m_event_EAT);
+    GameObject::addEvent(m_eventToggleStats);
+    GameObject::addEvent(m_eventToggleColliderVisibility);
+    GameObject::addEvent(m_eventToggleChunkVisibility);
 }
-Sheep::~Sheep()
-{
-    GameObject::removeText(m_propertyText);
-
-    delete m_propertyText;
-    delete m_sensor;
-    delete m_eventLEFT;
-    delete m_eventRIGHT;
-    delete m_event_EAT;
-    delete m_eventToggleStats;
-    delete m_eventToggleColliderVisibility;
-}
-
 void Sheep::checkEvent()
 {
-    GameObject::checkEvent();
-    m_eventLEFT->checkEvent();
-    m_eventRIGHT->checkEvent();
-    m_event_EAT->checkEvent();
-    m_eventToggleStats->checkEvent();
-    m_eventToggleColliderVisibility->checkEvent();
-    m_eventToggleChunkVisibility->checkEvent();
-
     if(Vector::length(m_controller->getMovingVector()) > 0)
     {
         //qDebug() << "Moving";
@@ -269,7 +255,10 @@ void Sheep::postTick()
     }
     if(m_propertyText->isVisible())
         m_propertyText->setPos(Vector2f(m_layerItem.getPos()) + m_propertyTextRelativePos);
-    GameObject::postTick();
+
+    GameObject::display_setCameraPos(m_layerItem.getPos());
+    m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_controller->getMovingVector())*0.2+0.2);
+    GameObject::display_setCameraZoom(m_cameraZoom);
 }
 unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
 {

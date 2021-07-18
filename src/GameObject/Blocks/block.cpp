@@ -4,7 +4,7 @@ vector<Texture*> Block::m_textureList;
 Block::Block(const Vector2u  &size)
     :   GameObject()
 {
-    EASY_BLOCK("Block()",profiler::colors::Gold);
+    GAME_OBJECT_BLOCK("Block()",profiler::colors::Gold);
     loadTextures();
     m_size = size;
     m_texturePainter    = new TexturePainter();

@@ -18,6 +18,8 @@ class Sheep     : public GameObject
         Sheep(const Sheep &other);
         virtual ~Sheep();
 
+        void setup();
+
         virtual void checkEvent();
         //virtual void preTick();
         //virtual void tick(const Vector2i&direction);
@@ -67,6 +69,7 @@ class Sheep     : public GameObject
     private:
 
         Timer           m_slowTimer;
+        float           m_cameraZoom;
 
 };
 #endif

@@ -21,7 +21,7 @@ class Flower     : public GameObject
                     m_textureList[i]->loadTexture(TexturePath::Plant::flower[i]);
                 }
             }
-            EASY_BLOCK("Flower()",profiler::colors::Gold);
+            GAME_OBJECT_BLOCK("Flower()",profiler::colors::Gold);
             m_texturePainter    = new TexturePainter();
 
             RectI boundingBox = RectI::getFrame(m_textureList[variation]->getRects());
@@ -49,9 +49,9 @@ class Flower     : public GameObject
 
             GameObject::setProperty(property);
 
-            EASY_BLOCK("setTexture()",profiler::colors::Gold);
+            GAME_OBJECT_BLOCK("setTexture()",profiler::colors::Gold);
             m_texturePainter->setTexture(m_textureList[variation]);
-            EASY_END_BLOCK;
+            GAME_OBJECT_END_BLOCK;
             GameObject::setPainter(m_texturePainter);
 
         }

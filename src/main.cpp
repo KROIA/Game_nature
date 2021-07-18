@@ -1,4 +1,4 @@
-//#define USE_EASY_PROFILER
+//#define USE_MAIN_PROFILER
 
 
 #include <QCoreApplication>
@@ -29,8 +29,8 @@ void user_tick_loop(float tickInterval,unsigned long long tick);
 void user_draw_loop(float tickInterval,unsigned long long tick);
 void userEventLoop(float tickInterval,unsigned long long tick);*/
 
-void testDisplay();
-Sprite *loadImage(const string &image);
+//void testDisplay();
+//Sprite *loadImage(const string &image);
 
 int main(int argc, char *argv[])
 {
@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
 
     Level game(windowSize,mapWidth);
     game.setup();
-    EASY_END_BLOCK;
-    EASY_BLOCK("while",profiler::colors::Amber100);
+    MAIN_END_BLOCK;
+    MAIN_BLOCK("while",profiler::colors::Amber100);
     while(game.engineIsActive())
     {
         try {
@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
         }
 
     }
-    EASY_END_BLOCK;
+    MAIN_END_BLOCK;
     game.cleanup();
     return 1;
 }
-void testDisplay()
+/*void testDisplay()
 {
     EASY_PROFILER_ENABLE;
     EASY_MAIN_THREAD;
@@ -76,8 +76,8 @@ void testDisplay()
     std::cout << "Profiler blocks count: " << blocks_count << std::endl;
     getchar();
 
-}
-Sprite *loadImage(const string &image)
+}*/
+/*Sprite *loadImage(const string &image)
 {
     //sf::Image   *i = new sf::Image();
     sf::Texture *t = new sf::Texture();
@@ -91,4 +91,4 @@ Sprite *loadImage(const string &image)
     //s->setPosition(PixelEngine::random(0,100),PixelEngine::random(0,100));
     //s->rotate(PixelEngine::random(0,360));
     return s;
-}
+}*/

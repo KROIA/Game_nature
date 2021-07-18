@@ -51,7 +51,8 @@ HEADERS += \
         $$blocksInc/stoneblock.h \
         $$blocksInc/waterblock.h \
         $$animalsInc/sheep.h \
-        inc/GameObject/Plants/flower.h
+        $$plantsInc/flower.h \
+        $$incPath/pixelEngineSettings.h
 
 
 # Default rules for deployment.

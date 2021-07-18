@@ -76,9 +76,21 @@ void Level::setup_engine()
     qDebug() << "setup_engine";
     m_engine = new PixelEngine();
 
-    m_engine->set_setting_checkEventInterval(1.0f/30.0f);
-    m_engine->set_setting_gameTickInterval(1.0f/120.0f);
-    m_engine->set_setting_displayInterval(1.0f/60.0f);
+    bool synced = true;
+
+    if(synced)
+    {
+        m_engine->set_setting_syncEngineInterval(0.02);
+        m_engine->set_setting_runInSync(true);
+    }
+    else
+    {
+        m_engine->set_setting_checkEventInterval(1.0f/3.0f);
+        m_engine->set_setting_gameTickInterval(1.0f/1.0f);
+        m_engine->set_setting_displayInterval(1.0f/6.0f);
+        m_engine->set_setting_runInSync(false);
+    }
+
 
     m_engine->setUserTickLoop(Level::userTickLoop);
     m_engine->setUserDisplayLoop(Level::userDrawLoop);
@@ -198,10 +210,11 @@ void Level::setup_level()
 #ifndef CLEAR_LEVEL
     qDebug() << "add to engine";
 
+    m_engine->addGameObject(m_sheep);
     m_engine->addGameObject(m_terainGroup);
     m_engine->addGameObject(m_grassList);
     m_engine->addGameObject(m_hitboxObjectList);
-    m_engine->addGameObject(m_sheep);
+
 #else
     //m_engine->addGameObject(m_hitboxObjectList);
     // m_engine->addGameObject(m_testObj);
@@ -248,10 +261,8 @@ void Level::cleanup()
 // Mainloop for the engine
 void Level::run()
 {
-    EASY_FUNCTION(profiler::colors::Amber200);
-    m_engine->checkEvent();
-    m_engine->tick();
-    m_engine->display();
+    LEVEL_FUNCTION(profiler::colors::Amber200);
+    m_engine->loop();
 #ifdef BUILD_WITH_EASY_PROFILER
     if(m_engine->getTick() == 10)
     {
@@ -367,7 +378,7 @@ GameObjectGroup *Level::factory_terain(RectU area)
         randomPos = Vector2u (PixelEngine::random(0,texture.getSize().x    - area.getSize().x),
                               PixelEngine::random(0,texture.getSize().y    - area.getSize().y));
     }
-    EASY_BLOCK("load map",profiler::colors::Amber);
+    LEVEL_BLOCK("load map",profiler::colors::Amber);
     GameObjectGroup *group = new GameObjectGroup();
     group->reserve(area.getSize().x * area.getSize().y);
     for(unsigned int x=0; x<area.getSize().x; x++)
@@ -432,7 +443,7 @@ void Level::regenerateGrassField()
     int lastPercent =0;
     while(m_grassList->size() < m_maxGrassAmount)
     {
-        EASY_BLOCK("while(m_grassList->size() < m_maxGrassAmount)",profiler::colors::Amber);
+        LEVEL_BLOCK("while(m_grassList->size() < m_maxGrassAmount)",profiler::colors::Amber);
         //Grass *grass = new Grass();
         //Point randomPos(PixelEngine::random(0,200),PixelEngine::random(0,200));
         //bool grassGodToPlant = false;
@@ -442,7 +453,7 @@ void Level::regenerateGrassField()
         // Get random generated Plant
         GameObject *plant;
         int randPlant = PixelEngine::randomL(0,100);
-        EASY_BLOCK("new OBJ",profiler::colors::Amber100);
+        LEVEL_BLOCK("new OBJ",profiler::colors::Amber100);
         if(randPlant > 80)
         {
            // qDebug() << "Generate Flower";
@@ -454,7 +465,7 @@ void Level::regenerateGrassField()
             plant = new Grass(PixelEngine::random(0,TexturePath::Plant::grass.size()-1));
         }
        // qDebug() << "setPos";
-        EASY_END_BLOCK;
+        LEVEL_END_BLOCK;
         plant->setPos(grassBlockGroup[randBlock]->getPos()+Vector2f(PixelEngine::random(-8,8),PixelEngine::random(-8,8)));
         plant->setRenderLayer(RenderLayerIndex::layer_2);
 
