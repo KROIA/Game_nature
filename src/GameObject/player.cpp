@@ -14,7 +14,7 @@ Player::Player()
     m_collider     = new Collider();
     m_controller   = new KeyController();
 
-    this->setPainter(m_painter);
+    this->addPainter(m_painter);
     this->setCollider(m_collider);
     this->addController(m_controller);
 
@@ -29,10 +29,8 @@ Player::Player()
     this->setProperty(property);
 
     m_sensor.setOwner(this);
-    sensorCollider = new Collider();
-    sensorCollider->addHitbox(RectI(-5,-10,10,5));
-    sensorCollider->updateBoundingBox();
-    m_sensor.setSensorCollider(sensorCollider);
+    m_sensor.setRect(RectF(-5,-10,10,5));
+
 
     //buildPlayer();
 }
@@ -61,7 +59,7 @@ void Player::tick(const Vector2i&direction)
 unsigned int Player::checkCollision(const vector<GameObject*> &other)
 {
     unsigned int collisionAmount = GameObject::checkCollision(other);
-    m_sensor.checkCollision(other);
+    m_sensor.detectObjects(other);
 
     if(m_sensorDebugTimer.start(0.1))
     {
@@ -94,7 +92,7 @@ void Player::setColor(const Color &color)
     m_playerColor = color;
     //m_painter->setPixelColor(m_playerColor);
 }
-void Player::setStartPos(const Vector2i&point)
+void Player::setStartPos(const Vector2f &point)
 {
     m_initalPos = point;
 }

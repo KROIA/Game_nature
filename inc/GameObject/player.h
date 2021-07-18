@@ -3,7 +3,7 @@
 
 #include "gameobject.h"
 #include "keyController.h"
-#include "sensor.h"
+#include "rectSensor.h"
 #include <QDebug>
 #include "timer.h"
 
@@ -20,7 +20,7 @@ class Player    :   public GameObject
 //        virtual void draw(PixelDisplay &display);
 
         virtual void setColor(const Color &color);
-        virtual void setStartPos(const Vector2i&point);
+        virtual void setStartPos(const Vector2f &point);
         virtual void setKeyBinding(const int &UP_KEY,
                                    const int &LEFT_KEY,
                                    const int &DOWN_KEY,
@@ -47,7 +47,7 @@ class Player    :   public GameObject
         virtual void setupPLayerBody(SpritePainter *p,Collider *c);
 
         Color m_playerColor;
-        Vector2i m_initalPos;
+        Vector2f m_initalPos;
 
         int m_keyUP;
         int m_keyLEFT;
@@ -61,7 +61,7 @@ class Player    :   public GameObject
         SpritePainter  *m_painter;
         KeyController *m_controller;
 
-        Sensor m_sensor;
+        RectSensor m_sensor;
         Timer m_sensorDebugTimer;
 };
 #endif

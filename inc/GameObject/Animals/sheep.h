@@ -1,7 +1,7 @@
 #ifndef SHEEP_H
 #define SHEEP_H
 #include "gameobject.h"
-#include "sensor.h"
+#include "rectSensor.h"
 #include "keyController.h"
 #include "animatedTexture.h"
 #include "texturePaths.h"
@@ -51,7 +51,8 @@ class Sheep     : public GameObject
         Texture         *m_texture;
 #endif
         TexturePainter  *m_texturePainter;
-        Sensor          *m_sensor;
+        Collider        *m_collider;
+        RectSensor      *m_sensor;
         KeyController   *m_controller;
 
 

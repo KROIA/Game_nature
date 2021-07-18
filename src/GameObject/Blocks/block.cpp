@@ -8,10 +8,12 @@ Block::Block(const Vector2u  &size)
     loadTextures();
     m_size = size;
     m_texturePainter    = new TexturePainter();
+    m_collider          = new Collider();
     //m_texture           = new Texture();
 
 
-    GameObject::setPainter(m_texturePainter);
+    GameObject::addPainter(m_texturePainter);
+    GameObject::setCollider(m_collider);
     //m_texturePainter->setOriginType(Origin::topLeft);
     //this->setup_collider();
 }
@@ -23,8 +25,10 @@ Block::Block(const Vector2u  &size,
     loadTextures();
     m_size = size;
     m_texturePainter = new TexturePainter();
+    m_collider          = new Collider();
     //m_texture        = new Texture();
-    GameObject::setPainter(m_texturePainter);
+    GameObject::addPainter(m_texturePainter);
+    GameObject::setCollider(m_collider);
     this->setTexturePath(texturePath);
     this->setProperty(property);
     this->setup_collider();
@@ -45,24 +49,24 @@ const Block &Block::operator=(const Block &other)
     return *this;
 }
 
-void Block::setPos(int x, int y)
+void Block::setPos(float x, float y)
 {
     GameObject::setPos(x,y);
 }
-void Block::setPos(const Vector2i&pos)
+void Block::setPos(const Vector2f&pos)
 {
     GameObject::setPos(pos);
 }
 
-void Block::setX(int x)
+void Block::setX(float x)
 {
     GameObject::setX(x);
 }
-void Block::setY(int y)
+void Block::setY(float y)
 {
     GameObject::setY(y);
 }
-
+/*
 void Block::moveToPos(const Vector2i&destination,Controller::MovingMode mode)
 {
     GameObject::moveToPos(destination,mode);
@@ -74,7 +78,7 @@ void Block::moveToPos(const int &x,const int &y,Controller::MovingMode mode)
 void Block::move(const Vector2i&vec,Controller::MovingMode mode)
 {
     GameObject::move(vec,mode);
-}
+}*/
 void Block::move(const Vector2f &vec,Controller::MovingMode mode)
 {
     GameObject::move(vec,mode);
@@ -138,7 +142,7 @@ void Block::setup_collider()
 {
   //  GameObject::addHitbox(RectI(m_size.getX(),m_size.getY()));
     RectI boundingBox = RectI::getFrame(m_texture->getRects());
-    GameObject::addHitbox(boundingBox);
+    m_collider->addHitbox(boundingBox);
 }
 void Block::loadTextures()
 {

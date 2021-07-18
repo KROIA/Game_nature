@@ -23,9 +23,10 @@ class Flower     : public GameObject
             }
             GAME_OBJECT_BLOCK("Flower()",profiler::colors::Gold);
             m_texturePainter    = new TexturePainter();
+            m_collider          = new Collider();
 
             RectI boundingBox = RectI::getFrame(m_textureList[variation]->getRects());
-            GameObject::addHitbox(boundingBox);
+            m_collider->addHitbox(boundingBox);
 
             Property::Type type;
             Property::Body body;
@@ -52,7 +53,8 @@ class Flower     : public GameObject
             GAME_OBJECT_BLOCK("setTexture()",profiler::colors::Gold);
             m_texturePainter->setTexture(m_textureList[variation]);
             GAME_OBJECT_END_BLOCK;
-            GameObject::setPainter(m_texturePainter);
+            GameObject::addPainter(m_texturePainter);
+            GameObject::setCollider(m_collider);
 
         }
 
@@ -61,6 +63,7 @@ class Flower     : public GameObject
     protected:
         static vector<Texture*> m_textureList;
         TexturePainter *m_texturePainter;
+        Collider       *m_collider;
 
     private:
 

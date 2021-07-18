@@ -12,6 +12,7 @@ Sheep::Sheep()
     GameObject::setHitboxFromTexture(*m_animatedTexture);
 #else
     m_texture           = new Texture();
+    m_collider          = new Collider();
     m_texture->setOriginType(Origin::middle);
     setTexturePathList(TexturePath::Animal::sheep);
 
@@ -19,11 +20,11 @@ Sheep::Sheep()
     m_texturePainter->setRenderLayer(RenderLayerIndex::layer_3);
 
     //m_collider->addHitbox(RectF(-20,-20,40,40));
-    GameObject::setHitboxFromTexture(*m_texture);
+    m_collider->setHitboxFromTexture(m_texture);
 #endif
 
 
-    m_sensor            = new Sensor();
+    m_sensor            = new RectSensor();
     m_controller        = new KeyController();
 
     m_eventLEFT         = new Event();
@@ -46,12 +47,13 @@ Sheep::Sheep(const Sheep &other)
     GameObject::setHitboxFromTexture(*m_animatedTexture);
 #else
     m_texture           = new Texture();
+    m_collider          = new Collider();
     *this->m_texture    = *other.m_texture;
     m_texturePainter->setTexture(m_texture);
     m_texturePainter->setRenderLayer(RenderLayerIndex::layer_3);
-    GameObject::setHitboxFromTexture(*m_texture);
+    m_collider->setHitboxFromTexture(m_texture);
 #endif
-    m_sensor            = new Sensor();
+    m_sensor            = new RectSensor();
     m_controller        = new KeyController();
 
     m_eventLEFT         = new Event();
@@ -91,9 +93,9 @@ void Sheep::setup()
     m_propertyText->setString("");
     m_propertyText->setCharacterSize(30);
     m_propertyText->setColor(Color(255,255,255,255)); // Transparent white
-    m_propertyTextRelativePos = Vector2f(16,-50);
+    m_propertyTextRelativePos = Vector2f(-160,500);
     //m_propertyTextRelativePos = Vector2f(10,0);
-    m_propertyText->setPos(m_propertyTextRelativePos);
+    m_propertyText->setOrigin(m_propertyTextRelativePos);
 
 
 
@@ -103,18 +105,16 @@ void Sheep::setup()
                   KEYBOARD_KEY_C, KEYBOARD_KEY_M);
 
     m_sensor->setOwner(this);
-    Collider *sensorCollider = new Collider();
-   // sensorCollider->addHitbox(RectI(-15,-19,30,6));
-    sensorCollider->addHitbox(RectI(-4,-19,8,8));
-    sensorCollider->updateBoundingBox();
-    m_sensor->setSensorCollider(sensorCollider);
+    m_sensor->setRect(RectF(-4,-19,8,8));
     setupProperty();
     m_cameraZoom = 0.2;
 
-    GameObject::setPainter(m_texturePainter);
-    GameObject::clearController();
-    GameObject::addController(m_controller);
+    GameObject::addPainter(m_texturePainter);
     GameObject::addPainter(m_propertyText);
+    GameObject::addController(m_controller);
+    GameObject::setCollider(m_collider);
+
+    GameObject::addSensor(m_sensor);
 
     GameObject::addEvent(m_eventLEFT);
     GameObject::addEvent(m_eventRIGHT);
@@ -234,7 +234,7 @@ void Sheep::checkEvent()
         GameObject::setVisibility_collider_boundingBox(isVisible);
         GameObject::setVisibility_collider_collisionData(isVisible);
         GameObject::setVisibility_collider_isCollidingWith(isVisible);
-        m_sensor->setVisibility_collider_boundingBox(isVisible);
+       // m_sensor->setVisibility_collider_boundingBox(isVisible);
     }
 
     if(m_eventToggleChunkVisibility->isSinking())
@@ -254,16 +254,16 @@ void Sheep::postTick()
         updatePropertyText();
     }
     if(m_propertyText->isVisible())
-        m_propertyText->setPos(Vector2f(m_layerItem.getPos()) + m_propertyTextRelativePos);
+        m_propertyText->setPos(Vector2f(m_pos) + m_propertyTextRelativePos);
 
-    GameObject::display_setCameraPos(m_layerItem.getPos());
-    m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_controller->getMovingVector())*0.2+0.2);
-    GameObject::display_setCameraZoom(m_cameraZoom);
+  //  GameObject::display_setCameraPos(m_pos);
+  //  m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_controller->getMovingVector())*0.2+0.2);
+  //  GameObject::display_setCameraZoom(m_cameraZoom);
 }
 unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
 {
     unsigned int collisionAmount = GameObject::checkCollision(other);
-    m_sensor->checkCollision(other);
+   // m_sensor->detectObjects(other);
     return collisionAmount;
 }
 /*void Sheep::draw(PixelDisplay &display)
