@@ -269,10 +269,13 @@ void Level::run()
     {
         m_visibility_collider_hitbox = !m_visibility_collider_hitbox;
         m_hitboxObjectList->setVisibility_collider_hitbox(m_visibility_collider_hitbox);
+        m_hitboxObjectList->setVisibility_collider_boundingBox(m_visibility_collider_hitbox);
     }
     if(m_engine->getTick() > 10)
-       m_sheep->rotate(-5);
-    if(m_engine->getTick() > 20)
+    {
+       m_sheep->move(Vector2f(0,-1));
+    }
+    if(m_engine->getTick() > 30)
        m_engine->stop();
 #endif
 }
@@ -303,6 +306,7 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick,const vecto
         m_visibility_collider_hitbox = !m_visibility_collider_hitbox;
         //m_sheep->setVisibility_collider_hitbox(m_visibility_collider_hitbox);
         m_hitboxObjectList->setVisibility_collider_hitbox(m_visibility_collider_hitbox);
+        m_hitboxObjectList->setVisibility_collider_boundingBox(m_visibility_collider_hitbox);
         //getchar();
     }
 #ifndef CLEAR_LEVEL

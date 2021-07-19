@@ -114,6 +114,8 @@ void Sheep::setup()
     setupProperty();
     m_cameraZoom = 0.2;
 
+    m_controller->setStepSize(2);
+
     GameObject::addPainter(m_texturePainter);
     GameObject::addPainter(m_propertyText);
     GameObject::addPainter(m_treePainter);
@@ -237,17 +239,18 @@ void Sheep::checkEvent()
     }
     if(m_eventToggleColliderVisibility->isSinking())
     {
-        bool isVisible = !GameObject::isVisible_collider_hitbox();
-        GameObject::setVisibility_collider_hitbox(isVisible);
-        GameObject::setVisibility_collider_boundingBox(isVisible);
-        GameObject::setVisibility_collider_collisionData(isVisible);
-        GameObject::setVisibility_collider_isCollidingWith(isVisible);
+        bool isVisible = !GameObject::getColliderPainter()->isVisible_boundingBox();
+        GameObject::getColliderPainter()->setVisibility_hitBox(isVisible);
+        GameObject::getColliderPainter()->setVisibility_boundingBox(isVisible);
+        GameObject::getColliderPainter()->setVisibility_collisionData(isVisible);
+        GameObject::getColliderPainter()->setVisibility_collidedObjects_boundingBox(isVisible);
+        GameObject::getColliderPainter()->setVisibility_collidedObjects_hitBox(isVisible);
        // m_sensor->setVisibility_collider_boundingBox(isVisible);
     }
 
     if(m_eventToggleChunkVisibility->isSinking())
     {
-        //GameObject::setVisibility_objectTree(!GameObject::isVisible_objectTree());
+        GameObject::setVisibility_objectTree(!GameObject::isVisible_objectTree());
         m_treePainter->setVisibility(!m_treePainter->isVisible());
     }
 }
@@ -265,9 +268,9 @@ void Sheep::postTick()
     if(m_propertyText->isVisible())
         m_propertyText->setPos(Vector2f(m_pos) + m_propertyTextRelativePos);
 
-  //  GameObject::display_setCameraPos(m_pos);
-  //  m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_controller->getMovingVector())*0.2+0.2);
-  //  GameObject::display_setCameraZoom(m_cameraZoom);
+   // GameObject::display_setCameraPos(m_pos);
+   // m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_movingVector)*0.2+0.2);
+   // GameObject::display_setCameraZoom(m_cameraZoom);
 }
 void Sheep::preDraw()
 {
