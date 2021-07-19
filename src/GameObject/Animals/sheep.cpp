@@ -3,6 +3,10 @@
 Sheep::Sheep()
     :   GameObject()
 {
+    m_tree              = new ObjectTree(RectF(0,0,256,256),1,10,0);
+    m_tree->setAsRoot(true);
+
+    m_treePainter       = new VertexPathPainter();
     m_texturePainter    = new TexturePainter();
 #ifdef USE_ANIMATED_TEXTURE
     m_animatedTexture   = new AnimatedTexture();
@@ -89,6 +93,7 @@ Sheep::~Sheep()
 
 void Sheep::setup()
 {
+
     m_propertyText->setVisibility(false);
     m_propertyText->setString("");
     m_propertyText->setCharacterSize(30);
@@ -111,6 +116,7 @@ void Sheep::setup()
 
     GameObject::addPainter(m_texturePainter);
     GameObject::addPainter(m_propertyText);
+    GameObject::addPainter(m_treePainter);
     GameObject::addController(m_controller);
     GameObject::setCollider(m_collider);
 
@@ -122,6 +128,8 @@ void Sheep::setup()
     GameObject::addEvent(m_eventToggleStats);
     GameObject::addEvent(m_eventToggleColliderVisibility);
     GameObject::addEvent(m_eventToggleChunkVisibility);
+    m_tree->insert(this);
+
 }
 void Sheep::checkEvent()
 {
@@ -239,7 +247,8 @@ void Sheep::checkEvent()
 
     if(m_eventToggleChunkVisibility->isSinking())
     {
-        GameObject::setVisibility_objectTree(!GameObject::isVisible_objectTree());
+        //GameObject::setVisibility_objectTree(!GameObject::isVisible_objectTree());
+        m_treePainter->setVisibility(!m_treePainter->isVisible());
     }
 }
 
@@ -259,6 +268,13 @@ void Sheep::postTick()
   //  GameObject::display_setCameraPos(m_pos);
   //  m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_controller->getMovingVector())*0.2+0.2);
   //  GameObject::display_setCameraZoom(m_cameraZoom);
+}
+void Sheep::preDraw()
+{
+    m_treePainter->clear();
+    vector<VertexPath*> list;
+    m_tree->getDrawable(list);
+    m_treePainter->addPath(list);
 }
 unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
 {

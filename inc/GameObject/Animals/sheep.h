@@ -9,6 +9,7 @@
 #include "texturePainter.h"
 #include "textPainter.h"
 
+#include "objectTree.h"
 //#define USE_ANIMATED_TEXTURE
 
 class Sheep     : public GameObject
@@ -24,6 +25,7 @@ class Sheep     : public GameObject
         //virtual void preTick();
         //virtual void tick(const Vector2i&direction);
         virtual void postTick();
+        virtual void preDraw();
         virtual unsigned int checkCollision(const vector<GameObject*> &other);
         //virtual void draw(PixelDisplay &display);
 
@@ -71,6 +73,9 @@ class Sheep     : public GameObject
 
         Timer           m_slowTimer;
         float           m_cameraZoom;
+
+        ObjectTree      *m_tree;
+        VertexPathPainter *m_treePainter;
 
 };
 #endif
