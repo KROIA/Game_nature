@@ -1,5 +1,5 @@
 #include "player.h"
-#include "gameObjectEventHandler.h"
+#include "engineInterface.h"
 
 Player::Player()
     :   GameObject()
@@ -28,7 +28,7 @@ Player::Player()
     property.setType_description(Property::Description::player);
     this->setProperty(property);
 
-    m_sensor.setOwner(this);
+    //m_sensor.setOwner(this);
     m_sensor.setRect(RectF(-5,-10,10,5));
 
 
@@ -227,15 +227,15 @@ void Player::rotate_270(const Vector2f &rotationPoint)
 void Player::event_hasCollision(vector<GameObject *> other)
 {
     //GameObject::event_hasCollision(other);
-    if(this->m_objEventHandler != nullptr)
-        m_objEventHandler->collisionOccured(this,other);
+    if(this->m_engine_interface != nullptr)
+        m_engine_interface->collisionOccured(this,other);
     /*Property::Property otherProperty = other->getProperty();
 
     if(otherProperty.getBody().material    == Property::Material::Grass &&
        otherProperty.getType().description != Property::Description::dynamicObstacle)
     {
-        //if(m_objEventHandler != nullptr)
-        //   m_objEventHandler->removeFromEngine(other);
+        //if(m_engine_interface != nullptr)
+        //   m_engine_interface->removeFromEngine(other);
         //this->rotate_270();
     }*/
 

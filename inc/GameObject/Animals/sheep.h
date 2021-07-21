@@ -2,6 +2,7 @@
 #define SHEEP_H
 #include "gameobject.h"
 #include "rectSensor.h"
+#include "laserSensor.h"
 #include "keyController.h"
 #include "animatedTexture.h"
 #include "texturePaths.h"
@@ -34,6 +35,7 @@ class Sheep     : public GameObject
                                    const int &LEFT_KEY,
                                    const int &DOWN_KEY,
                                    const int &RIGHT_KEY,
+                                   const int &SPRINT_KEY,
                                    const int &EAT_KEY,
                                    const int &DISPLAY_PROPERTY_KEY,
                                    const int &DISPLAY_COLLIDER_KEY,
@@ -54,8 +56,10 @@ class Sheep     : public GameObject
 #endif
         TexturePainter  *m_texturePainter;
         Collider        *m_collider;
-        RectSensor      *m_sensor;
         KeyController   *m_controller;
+
+        RectSensor      *m_sensor;
+        LaserSensor     *m_laserSensor;
 
 
         Event           *m_eventLEFT;   // Rotate Left
@@ -64,6 +68,7 @@ class Sheep     : public GameObject
         Event           *m_eventToggleStats; // Q
         Event           *m_eventToggleColliderVisibility; // C
         Event           *m_eventToggleChunkVisibility; // M
+        Event           *m_event_sprint;    //ShiftKey
 
         Timer           m_debugTimer;
 

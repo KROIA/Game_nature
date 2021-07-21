@@ -26,6 +26,12 @@ Vector2i               Level::m_windowMidlePoint;
 
 GameObjectGroup     *Level::m_grassList;
 unsigned int         Level::m_maxGrassAmount;
+std::unordered_map<std::pair<int, int>, bool, Level::hash_pair> Level::m_generatedMap;
+RectI Level::m_generatedMapRect;
+int Level::m_mapGeneratorX = -16*500;
+int Level::m_mapGeneratorY = -16*500;
+Timer Level::m_chunkGenTimer;
+FastNoiseLite Level::noise;
 
 
 // TESTS
@@ -42,13 +48,15 @@ Level::Level(Vector2u  windowSize, unsigned int mapWidth)
     settings.display.windowSize = m_windowSize;
     settings.display.pixelMapSize = Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x));
     settings.gameObject.objectTree.maxObjects = 128;
-    settings.gameObject.objectTree.boundry = RectF(0,0,256,256);
+    settings.gameObject.objectTree.boundry = RectF(-1,-1,256,256);
   //  settings.gameObject.objectTree.boundry = RectF(-32,-32,256,256);
     //settings.gameObject.chunkMap.chunk.size = Vector2u(128,128);
     //settings.gameObject.chunkMap.chunkMapSize = settings.gameObject.chunkMap.chunk.size * 16u;
     //settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size) * 8;
     //settings.gameObject.chunkMap.position = -Vector2i(settings.gameObject.chunkMap.chunk.size);
     PixelEngine::setSettings(settings);
+    noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+
 
     setup();
 }
@@ -149,7 +157,9 @@ void Level::setup_level()
 
 #ifndef CLEAR_LEVEL
     // Generate random Blocks on Position ( 10 | 10 ) with the size of ( 5 x 4 ) blocks
-    m_terainGroup = factory_terain(RectU(Vector2u (0,0),Vector2u (0,0)));
+    //m_terainGroup = factory_terain(RectU(Vector2u (0,0),Vector2u (0,0)));
+
+
 
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
@@ -158,13 +168,16 @@ void Level::setup_level()
     m_sheep->setPos(m_windowMidlePoint);
 #endif
     // Generate Grass
-    m_maxGrassAmount    = m_terainGroup->size()*1.5;
+    m_maxGrassAmount    = 1;//m_terainGroup->size()*1.5;
+    m_terainGroup       = new GameObjectGroup();
     m_grassList         = new GameObjectGroup();
     qDebug() << "regenerateGrassField: size: "<<m_maxGrassAmount;
-    regenerateGrassField();
+   // regenerateGrassField();
     qDebug() << "regenerateGrassField done";
 
     m_hitboxObjectList = new GameObjectGroup();
+
+    terainGenerator(m_engine,RectI(0,0,10*16,10*16));
 #else
     m_hitboxObjectList = new GameObjectGroup();
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
@@ -310,13 +323,22 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick,const vecto
         //getchar();
     }
 #ifndef CLEAR_LEVEL
-    regenerateGrassField();
+   // regenerateGrassField();
 #endif
 }
 
  // userTickLoop: Here you can manipulate the game.
 void Level::userTickLoop(float tickInterval,unsigned long long tick)
 {
+    RectI generatorRect;
+    Vector2i rectSize(16*64,16*64);
+    generatorRect.setPos(Vector2i(m_sheep->getPos().x-rectSize.x/2,m_sheep->getPos().y-rectSize.y/2));
+    generatorRect.setSize(rectSize);
+    terainGenerator(m_engine,generatorRect);
+    /*if(m_chunkGenTimer.start(0.1))
+    {
+        chunkLoader();
+    }*/
 #ifndef CLEAR_LEVEL
 #ifdef GLOBALVIEW
     Vector2f movingVec = Vector2f(m_windowMidlePoint) - Vector2f(m_sheep->getPos());
@@ -429,6 +451,106 @@ GameObjectGroup *Level::factory_terain(RectU area)
     }
     qDebug() << "factory_terain done";
     return group;
+}
+void Level::chunkLoader()
+{
+    if(m_mapGeneratorY>500*16)
+        return;
+    RectI area(m_mapGeneratorX,m_mapGeneratorY,16*16,16*16);
+    terainGenerator(m_engine,area);
+    m_mapGeneratorX += area.getSize().x;
+
+
+    if(m_mapGeneratorX > 16*500)
+    {
+        m_mapGeneratorX = -500*16;
+        m_mapGeneratorY += area.getSize().y;
+    }
+}
+void Level::terainGenerator(PixelEngine *engine,RectI area)
+{
+    int scale = 16;
+    RectI scaledArea(area.getPos()/scale,area.getSize()/scale);
+
+    for(int x=scaledArea.getPos().x; x<scaledArea.getPos().x+scaledArea.getSize().x; x++)
+    {
+        for(int y=scaledArea.getPos().y; y<scaledArea.getPos().y+scaledArea.getSize().y; y++)
+        {
+           // qDebug()<<x<<" "<<y<< " "<<;
+            std::pair<int,int> pos(x,y);
+            if(m_generatedMap[pos] == false)
+            {
+                GameObject *block = generateBlock(x,y);
+
+                block->setPosInitial(Vector2f(x*scale,y*scale));
+
+
+                if(block->getProperty().getBody().material == Property::Material::Grass)
+                {
+                    GameObject *plant = generatePlant();
+                    plant->setPosInitial(block->getPos()+Vector2f(PixelEngine::random(-8,8),PixelEngine::random(-8,8)));
+
+                    //m_grassList->reserve(10000);
+                    //m_hitboxObjectList->reserve(10000);
+                    m_grassList->add(plant);
+                    m_hitboxObjectList->add(plant);
+                   // engine->addGameObject(plant);
+                }
+
+
+                m_terainGroup->add(block);
+               // engine->addGameObject(block);
+                m_generatedMap[pos] = true;
+            }
+        }
+    }
+}
+GameObject* Level::generateBlock(int x,int y)
+{
+    noise.SetFractalType(FastNoiseLite::FractalType_Ridged);
+    float  noiseValue = noise.GetNoise((float)x, (float)y);
+
+    noise.SetFractalType(FastNoiseLite::FractalType_PingPong);
+    float waterValue  = noise.GetNoise((float)x, (float)y);
+
+    Block *block;
+    if(waterValue<-0.6)
+    {
+        block = new WaterBlock();
+    }
+    else
+    {
+        if(waterValue<-0.5)
+        {
+            block = new SandBlock();
+        }
+       else if(noiseValue>0.3)
+        {
+            block = new GrassBlock();
+        }
+        else
+        {
+            block = new DirtBlock();
+        }
+    }
+    block->setRenderLayer(RenderLayerIndex::layer_1);
+    return block;
+
+}
+GameObject *Level::generatePlant()
+{
+    int randPlant = PixelEngine::randomL(0,100);
+    GameObject *plant;
+    if(randPlant > 80)
+    {
+        plant = new Flower(PixelEngine::random(0,TexturePath::Plant::flower.size()-1));
+    }
+    else
+    {
+        plant = new Grass(PixelEngine::random(0,TexturePath::Plant::grass.size()-1));
+    }
+    plant->setRenderLayer(RenderLayerIndex::layer_2);
+    return plant;
 }
 void Level::regenerateGrassField()
 {

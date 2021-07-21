@@ -2,7 +2,7 @@
 #define PIXELENGINESETTINGS_H
 
 // Timing
-//#define PIXELENGINE_NO_TIMED_LOOPS
+#define PIXELENGINE_NO_TIMED_LOOPS
 
 // Performance
 #define PIXELENGINE_USE_THREADS
@@ -13,8 +13,10 @@
 
 
 // Debuging
+//#define DEBUGER
 #define PIXELENGINE_STATISTICS
 //#define PIXELENGINE_DBUG_THREAD
+
 
 
 

@@ -23,12 +23,14 @@ Sheep::Sheep()
     m_texturePainter->setTexture(m_texture);
     m_texturePainter->setRenderLayer(RenderLayerIndex::layer_3);
 
-    //m_collider->addHitbox(RectF(-20,-20,40,40));
+    //m_collider->addHitbox(RectF(-80,5,80,30));
     m_collider->setHitboxFromTexture(m_texture);
 #endif
 
 
     m_sensor            = new RectSensor();
+    m_laserSensor       = new LaserSensor();
+
     m_controller        = new KeyController();
 
     m_eventLEFT         = new Event();
@@ -37,6 +39,7 @@ Sheep::Sheep()
     m_eventToggleStats  = new Event();
     m_eventToggleColliderVisibility = new Event();
     m_eventToggleChunkVisibility    = new Event();
+    m_event_sprint      = new Event();
 
     m_propertyText         = new TextPainter();
 }
@@ -55,6 +58,7 @@ Sheep::Sheep(const Sheep &other)
     *this->m_texture    = *other.m_texture;
     m_texturePainter->setTexture(m_texture);
     m_texturePainter->setRenderLayer(RenderLayerIndex::layer_3);
+
     m_collider->setHitboxFromTexture(m_texture);
 #endif
     m_sensor            = new RectSensor();
@@ -66,6 +70,7 @@ Sheep::Sheep(const Sheep &other)
     m_eventToggleStats  = new Event();
     m_eventToggleColliderVisibility = new Event();
     m_eventToggleChunkVisibility    = new Event();
+    m_event_sprint      = new Event();
 
     m_propertyText      = new TextPainter();
 
@@ -89,11 +94,11 @@ Sheep::~Sheep()
     delete m_event_EAT;
     delete m_eventToggleStats;
     delete m_eventToggleColliderVisibility;
+    delete m_event_sprint;
 }
 
 void Sheep::setup()
 {
-
     m_propertyText->setVisibility(false);
     m_propertyText->setString("");
     m_propertyText->setCharacterSize(30);
@@ -105,24 +110,33 @@ void Sheep::setup()
 
 
     setKeyBinding(KEYBOARD_KEY_W, KEYBOARD_KEY_A,
-                  KEYBOARD_KEY_S, KEYBOARD_KEY_D,
+                  KEYBOARD_KEY_S, KEYBOARD_KEY_D,  KEYBOARD_KEY_SHIFT,
                   KEYBOARD_KEY_E, KEYBOARD_KEY_Q,
                   KEYBOARD_KEY_C, KEYBOARD_KEY_M);
 
-    m_sensor->setOwner(this);
+    //m_sensor->setOwner(this);
     m_sensor->setRect(RectF(-4,-19,8,8));
+    m_sensor->setVisibility(true);
+    m_sensor->setVisibility_detectedObjects(true);
+
+    m_laserSensor->addLaser(Vector2f(0, -16),25,-90);
+    m_laserSensor->addLaser(Vector2f(-1,-16),20,-135);
+    m_laserSensor->addLaser(Vector2f(1, -16),20,-45);
+
     setupProperty();
     m_cameraZoom = 0.2;
 
-    m_controller->setStepSize(2);
+    m_controller->setStepSize(100);
 
     GameObject::addPainter(m_texturePainter);
     GameObject::addPainter(m_propertyText);
-    GameObject::addPainter(m_treePainter);
+    //GameObject::addPainter(m_treePainter);
     GameObject::addController(m_controller);
     GameObject::setCollider(m_collider);
 
+
     GameObject::addSensor(m_sensor);
+    GameObject::addSensor(m_laserSensor);
 
     GameObject::addEvent(m_eventLEFT);
     GameObject::addEvent(m_eventRIGHT);
@@ -130,7 +144,8 @@ void Sheep::setup()
     GameObject::addEvent(m_eventToggleStats);
     GameObject::addEvent(m_eventToggleColliderVisibility);
     GameObject::addEvent(m_eventToggleChunkVisibility);
-    m_tree->insert(this);
+    GameObject::addEvent(m_event_sprint);
+   // m_tree->insert(this);
 
 }
 void Sheep::checkEvent()
@@ -154,7 +169,7 @@ void Sheep::checkEvent()
         }*/
     }
 
-    float deltaDeg = 5;
+    float deltaDeg = 360 * GameObject::getEngine_deltaTime();
     if(m_eventLEFT->isPressed())
     {
 
@@ -186,7 +201,6 @@ void Sheep::checkEvent()
 
     if(m_event_EAT->isSinking())
     {
-
         vector<GameObject*>detectedObjList  = m_sensor->getDetectedObjects();
         if(detectedObjList.size()>0)
         {
@@ -245,6 +259,7 @@ void Sheep::checkEvent()
         GameObject::getColliderPainter()->setVisibility_collisionData(isVisible);
         GameObject::getColliderPainter()->setVisibility_collidedObjects_boundingBox(isVisible);
         GameObject::getColliderPainter()->setVisibility_collidedObjects_hitBox(isVisible);
+        GameObject::setVisibility_colliderSearchRect(isVisible);
        // m_sensor->setVisibility_collider_boundingBox(isVisible);
     }
 
@@ -252,6 +267,14 @@ void Sheep::checkEvent()
     {
         GameObject::setVisibility_objectTree(!GameObject::isVisible_objectTree());
         m_treePainter->setVisibility(!m_treePainter->isVisible());
+    }
+    if(m_event_sprint->isSinking())
+    {
+        m_controller->setStepSize(m_controller->getStepSize()*2);
+    }
+    if(m_event_sprint->isRising())
+    {
+        m_controller->setStepSize(m_controller->getStepSize()/2);
     }
 }
 
@@ -268,16 +291,17 @@ void Sheep::postTick()
     if(m_propertyText->isVisible())
         m_propertyText->setPos(Vector2f(m_pos) + m_propertyTextRelativePos);
 
-   // GameObject::display_setCameraPos(m_pos);
-   // m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_movingVector)*0.2+0.2);
+    GameObject::display_setCameraPos(m_pos);
+   // m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_movingVector)*1+0.2);
    // GameObject::display_setCameraZoom(m_cameraZoom);
 }
 void Sheep::preDraw()
 {
-    m_treePainter->clear();
-    vector<VertexPath*> list;
-    m_tree->getDrawable(list);
-    m_treePainter->addPath(list);
+    //m_treePainter->clear();
+    //vector<VertexPath*> list;
+    //m_tree->getDrawable(list);
+    //m_treePainter->addPath(list);
+    //qDebug() << "delta T:"<<GameObject::getEngine_deltaTime();
 }
 unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
 {
@@ -329,6 +353,7 @@ void Sheep::setKeyBinding(const int &UP_KEY,
                           const int &LEFT_KEY,
                           const int &DOWN_KEY,
                           const int &RIGHT_KEY,
+                          const int &SPRINT_KEY,
                           const int &EAT_KEY,
                           const int &DISPLAY_PROPERTY_KEY,
                           const int &DISPLAY_COLLIDER_KEY,
@@ -345,6 +370,7 @@ void Sheep::setKeyBinding(const int &UP_KEY,
     m_eventToggleStats->setKey(DISPLAY_PROPERTY_KEY);
     m_eventToggleColliderVisibility->setKey(DISPLAY_COLLIDER_KEY);
     m_eventToggleChunkVisibility->setKey(DISPLAY_CHUNK_KEY);
+    m_event_sprint->setKey(SPRINT_KEY);
 }
 void Sheep::event_hasCollision(vector<GameObject *> other)
 {
@@ -363,7 +389,7 @@ void Sheep::event_hasCollision(vector<GameObject *> other)
 void Sheep::rotate(const float &deg)
 {
     GameObject::rotate(deg);
-    m_sensor->setRotation(GameObject::getRotation());
+   // m_sensor->setRotation(GameObject::getRotation());
 }
 void Sheep::setupProperty()
 {
