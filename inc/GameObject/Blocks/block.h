@@ -21,14 +21,6 @@ class Block     : public GameObject
         virtual void setX(float x);
         virtual void setY(float y);
 
-       // virtual void moveToPos(const Vector2i&destination,Controller::MovingMode mode = Controller::MovingMode::add);
-       // virtual void moveToPos(const int &x,const int &y,Controller::MovingMode mode = Controller::MovingMode::add);
-       // virtual void move(const Vector2i&vec,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void move(const Vector2f &vec,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void move(const float &deltaX, const float &deltaY,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void moveX(const float &delta,Controller::MovingMode mode = Controller::MovingMode::add);
-        virtual void moveY(const float &delta,Controller::MovingMode mode = Controller::MovingMode::add);
-        //virtual const Vector2i &getPos() const;
         virtual const Vector2f &getMovingVector() const;
 
         virtual const Vector2u  &getSize();

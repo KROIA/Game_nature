@@ -1,42 +1,70 @@
-//#define USE_MAIN_PROFILER
-
-
 #include <QCoreApplication>
-/*#include "pixelengine.h"
-#include "grass.h"
-#include "player.h"
-#include "grassblock.h"*/
-
 #include "QDebug"
+#include <stdio.h>
+#include <iostream>
 
 #include "level.h"
 
-/*PixelEngine     *engine;
-Player          *obj_player;
 
-Event *keyEvent_P;
-Event *keyEvent_O;
+#define BACKGROUND_WHITE BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED
+#define FOREGROUND_WHITE FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED
 
-// toggle Hitbox
-Event *keyEvent_H;
-GameObjectGroup hitboxObjectList;
-bool hitboxIsVisible;
+#define PRINT_WARNING DEBUG_COLORED("WARNUNG\t",FOREGROUND_RED | FOREGROUND_GREEN)
+#define PRINT_ERROR   DEBUG_COLORED("WARNUNG\t",FOREGROUND_RED)
 
-void setup_level();
-void clear_level();
+#define SET_CONSOLE_COLOR(color)\
+{\
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\
+SetConsoleTextAttribute(hConsole, color);\
+}
+//__PRETTY_FUNCTION__
+#define DEBUG_STR(message) printf("%s",message);
 
-void user_tick_loop(float tickInterval,unsigned long long tick);
-void user_draw_loop(float tickInterval,unsigned long long tick);
-void userEventLoop(float tickInterval,unsigned long long tick);*/
 
-//void testDisplay();
-//Sprite *loadImage(const string &image);
+#define DBG_TXT_INFILE "In File: "
+#define DBG_TXT_WHAT "what: "
+#define DEBUG_PRINT_NL DEBUG_STR("\n")
+#define DEBUG_PRINT_FUNCTION DEBUG_STR(__PRETTY_FUNCTION__)
+#define DEBUG_FORMATED(message,color)\
+    DEBUG_COLORED(DBG_TXT_INFILE,FOREGROUND_WHITE)\
+    DEBUG_COLORED(__PRETTY_FUNCTION__,FOREGROUND_WHITE)\
+    DEBUG_COLORED(message"\n",color)
+
+
+
+#define DEBUG_COLORED(message,color)\
+{\
+SET_CONSOLE_COLOR(color)\
+DEBUG_STR(message)\
+SET_CONSOLE_COLOR(BACKGROUND_WHITE)\
+}
+
+#define DEBUG_ERROR(message) PRINT_WARNING DEBUG_PRINT_NL DEBUG_STR(DBG_TXT_WHAT) DEBUG_FORMATED(message,FOREGROUND_RED)
+#define DEBUG_WARNING(message) PRINT_ERROR DEBUG_FORMATED(message,FOREGROUND_RED | FOREGROUND_GREEN)
+
 
 int main(int argc, char *argv[])
 {
+
+
+    /*HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    SetConsoleTextAttribute(hConsole,
+      FOREGROUND_RED);
+    printf("red text\n");
+
+    SetConsoleTextAttribute(hConsole,
+      FOREGROUND_RED | FOREGROUND_GREEN | BACKGROUND_BLUE);
+    printf("yellow on blue\n");
+
+*/
+
+   /* DEBUG_ERROR("testerror");
+    DEBUG_WARNING("testwarnung");
+    return 0;
+    getchar();*/
     unsigned int mapWidth   = 16*20; // Width of the Grid, the hight will be calculated depending of the windowSize
-    //unsigned int mapWidth   = 200;
-    float displayScale     = 0.9;
+    float displayScale     = 1;
     Vector2u  windowSize(1900*displayScale,1000*displayScale);
 
     Level game(windowSize,mapWidth);
@@ -56,39 +84,3 @@ int main(int argc, char *argv[])
     game.cleanup();
     return 1;
 }
-/*void testDisplay()
-{
-    EASY_PROFILER_ENABLE;
-    EASY_MAIN_THREAD;
-    unsigned int mapWidth   = 16*16; // Width of the Grid, the hight will be calculated depending of the windowSize
-    float displayScale     = 0.9;
-    Vector2u  windowSize(1900*displayScale,1000*displayScale);
-    PixelDisplay display(windowSize,Vector2u (mapWidth,float(mapWidth)*float(windowSize.y)/float(windowSize.x)));
-
-    RectF rect(0,0,2,1);
-    rect.rotate(Vector2f(0,0),45);
-
-    display.addVertexLine(rect.getDrawable());
-    display.display();
-
-
-    auto blocks_count = profiler::dumpBlocksToFile("profiler.prof");
-    std::cout << "Profiler blocks count: " << blocks_count << std::endl;
-    getchar();
-
-}*/
-/*Sprite *loadImage(const string &image)
-{
-    //sf::Image   *i = new sf::Image();
-    sf::Texture *t = new sf::Texture();
-    sf::Sprite  *s = new sf::Sprite();
-    //i->loadFromFile(image);
-   // qDebug()<<i->getSize().x;
-    t->loadFromFile(image);
-    s->setTexture(*t);
-
-    s->setPosition(1,1);
-    //s->setPosition(PixelEngine::random(0,100),PixelEngine::random(0,100));
-    //s->rotate(PixelEngine::random(0,360));
-    return s;
-}*/

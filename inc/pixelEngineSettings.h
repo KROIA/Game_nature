@@ -1,5 +1,6 @@
 #ifndef PIXELENGINESETTINGS_H
 #define PIXELENGINESETTINGS_H
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 // Timing
 #define PIXELENGINE_NO_TIMED_LOOPS

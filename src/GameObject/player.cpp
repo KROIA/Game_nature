@@ -111,11 +111,11 @@ void Player::setKeyBinding(const int &UP_KEY,
     m_controller->setKey_forMove_RIGHT(m_keyRIGHT);
     m_controller->setKey_forMove_DOWN(m_keyDOWN);
 }
-void Player::setStepSize(const unsigned int size)
+void Player::setStepSize(const float size)
 {
     m_controller->setStepSize(size);
 }
-const unsigned int &Player::getStepSize() const
+float Player::getStepSize() const
 {
     return m_controller->getStepSize();
 }

@@ -13,10 +13,10 @@ unsigned int         Level::m_mapWidth;
 //ManagedGameObjectGroup      Level::m_objectList;
 
 // Toggle stats on and off
-Event               *Level::m_keyEvent_P;
+KeyEvent               *Level::m_keyEvent_P;
 
 // Toggle Hitbox of all objects in the list: hitboxObjectList
-Event               *Level::m_keyEvent_H;
+KeyEvent               *Level::m_keyEvent_H;
 GameObjectGroup     *Level::m_terainGroup;
 GameObjectGroup     *Level::m_hitboxObjectList;
 bool                 Level::m_visibility_collider_hitbox;
@@ -138,7 +138,7 @@ void Level::setup_level()
     }
     m_pixPainter->addPixel(size.getX()/2,size.getY()/2,Color(100,255,0));
     m_testObj = new GameObject();
-    m_pixPainter->setOriginType(SpritePainter::Origin::middle);
+    m_pixPainter->setOriginType(SpritePainter::Origin::center);
     m_testObj->setPainter(m_pixPainter);
     m_testObj->setPos(30,30);
 
@@ -163,7 +163,7 @@ void Level::setup_level()
 
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPos(Vector2f(150,50));
+    m_sheep->setPos(Vector2f(0,0));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -263,8 +263,11 @@ void Level::setup_level()
 void Level::setup_keyEvent()
 {
     qDebug() << "setup_keyEvent";
-    m_keyEvent_P = new Event(KEYBOARD_KEY_P);
-    m_keyEvent_H = new Event(KEYBOARD_KEY_H);
+    m_keyEvent_P = new KeyEvent(KEYBOARD_KEY_P);
+    m_keyEvent_H = new KeyEvent(KEYBOARD_KEY_H);
+
+    m_engine->addEvent(m_keyEvent_P);
+    m_engine->addEvent(m_keyEvent_H);
     qDebug() << "setup_keyEvent done";
 }
 void Level::cleanup()
@@ -302,10 +305,15 @@ bool Level::engineIsActive()
  // userEventLoop: Here you can handle your Events (KeyEvents).
 void Level::userEventLoop(float tickInterval,unsigned long long tick,const vector<sf::Event> &eventLsit)
 {
-    // Check for keyEvents
-    m_keyEvent_P->checkEvent();
-    m_keyEvent_H->checkEvent();
-
+   /* if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        // left click...
+    }
+    // get global mouse position
+    sf::Vector2i position = sf::Mouse::getPosition();
+    qDebug() << "pos: "<<position.x<<" "<<position.y;*/
+    // set mouse position relative to a window
+  //  sf::Mouse::setPosition(sf::Vector2i(100, 200), window);
     if(m_keyEvent_P->isSinking())
     {
         // Toggle stats visualisation

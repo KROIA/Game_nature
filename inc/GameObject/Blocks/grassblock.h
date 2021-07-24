@@ -43,14 +43,5 @@ class GrassBlock : public Block
             Block::setup_collider();
             GAME_OBJECT_END_BLOCK;
         }
-
-        virtual void checkEvent()
-        {
-            Block::checkEvent();
-            if(m_property.getFood().foodAmount == 0)
-            {
-                GameObject::removeMeFromEngine();
-            }
-        }
 };
 #endif // GRASSBLOCK_H

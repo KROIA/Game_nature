@@ -78,10 +78,10 @@ class Level
         //static ManagedGameObjectGroup      m_objectList;
 
         // Toggle stats on and off
-        static Event               *m_keyEvent_P;
+        static KeyEvent               *m_keyEvent_P;
 
         // Toggle Hitbox of all objects in the list: hitboxObjectList
-        static Event               *m_keyEvent_H;
+        static KeyEvent               *m_keyEvent_H;
         static GameObjectGroup     *m_terainGroup;
         static GameObjectGroup     *m_hitboxObjectList;
         static bool                 m_visibility_collider_hitbox;

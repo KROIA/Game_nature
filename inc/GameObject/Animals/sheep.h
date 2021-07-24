@@ -9,6 +9,8 @@
 #include "timer.h"
 #include "texturePainter.h"
 #include "textPainter.h"
+#include "mouseMoveEvent.h"
+#include "mouseButtonEvent.h"
 
 #include "objectTree.h"
 //#define USE_ANIMATED_TEXTURE
@@ -22,7 +24,7 @@ class Sheep     : public GameObject
 
         void setup();
 
-        virtual void checkEvent();
+        virtual void checkEvent(float deltaTime);
         //virtual void preTick();
         //virtual void tick(const Vector2i&direction);
         virtual void postTick();
@@ -42,9 +44,6 @@ class Sheep     : public GameObject
                                    const int &DISPLAY_CHUNK_KEY);
 
         virtual void event_hasCollision(vector<GameObject *> other);
-
-        virtual void rotate(const float &deg);
-
     protected:
         virtual void setupProperty();
         virtual void updatePropertyText();
@@ -62,13 +61,13 @@ class Sheep     : public GameObject
         LaserSensor     *m_laserSensor;
 
 
-        Event           *m_eventLEFT;   // Rotate Left
-        Event           *m_eventRIGHT;  // Rotate right
-        Event           *m_event_EAT;   // Eat with key "E"
-        Event           *m_eventToggleStats; // Q
-        Event           *m_eventToggleColliderVisibility; // C
-        Event           *m_eventToggleChunkVisibility; // M
-        Event           *m_event_sprint;    //ShiftKey
+        KeyEvent           *m_eventLEFT;   // Rotate Left
+        KeyEvent           *m_eventRIGHT;  // Rotate right
+        KeyEvent           *m_event_EAT;   // Eat with key "E"
+        KeyEvent           *m_eventToggleStats; // Q
+        KeyEvent           *m_eventToggleColliderVisibility; // C
+        KeyEvent           *m_eventToggleChunkVisibility; // M
+        KeyEvent           *m_event_sprint;    //ShiftKey
 
         Timer           m_debugTimer;
 
@@ -81,6 +80,8 @@ class Sheep     : public GameObject
 
         ObjectTree      *m_tree;
         VertexPathPainter *m_treePainter;
+        MouseMoveEvent  *m_mouseMoveEvent;
+        MouseButtonEvent*m_mouseButtonEvent;
 
 };
 #endif

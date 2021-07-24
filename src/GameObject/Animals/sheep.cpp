@@ -10,14 +10,14 @@ Sheep::Sheep()
     m_texturePainter    = new TexturePainter();
 #ifdef USE_ANIMATED_TEXTURE
     m_animatedTexture   = new AnimatedTexture();
-    m_animatedTexture->setOriginType(Origin::middle);
+    m_animatedTexture->setOriginType(Origin::center);
     setTexturePathList(TexturePath::Animal::sheep);
     m_texturePainter->setTexture(m_animatedTexture);
     GameObject::setHitboxFromTexture(*m_animatedTexture);
 #else
     m_texture           = new Texture();
     m_collider          = new Collider();
-    m_texture->setOriginType(Origin::middle);
+    m_texture->setOriginType(Origin::center);
     setTexturePathList(TexturePath::Animal::sheep);
 
     m_texturePainter->setTexture(m_texture);
@@ -33,13 +33,15 @@ Sheep::Sheep()
 
     m_controller        = new KeyController();
 
-    m_eventLEFT         = new Event();
-    m_eventRIGHT        = new Event();
-    m_event_EAT         = new Event();
-    m_eventToggleStats  = new Event();
-    m_eventToggleColliderVisibility = new Event();
-    m_eventToggleChunkVisibility    = new Event();
-    m_event_sprint      = new Event();
+    m_eventLEFT         = new KeyEvent();
+    m_eventRIGHT        = new KeyEvent();
+    m_event_EAT         = new KeyEvent();
+    m_eventToggleStats  = new KeyEvent();
+    m_eventToggleColliderVisibility = new KeyEvent();
+    m_eventToggleChunkVisibility    = new KeyEvent();
+    m_event_sprint      = new KeyEvent();
+    m_mouseMoveEvent    = new MouseMoveEvent();
+    m_mouseButtonEvent  = new MouseButtonEvent();
 
     m_propertyText         = new TextPainter();
 }
@@ -64,13 +66,13 @@ Sheep::Sheep(const Sheep &other)
     m_sensor            = new RectSensor();
     m_controller        = new KeyController();
 
-    m_eventLEFT         = new Event();
-    m_eventRIGHT        = new Event();
-    m_event_EAT         = new Event();
-    m_eventToggleStats  = new Event();
-    m_eventToggleColliderVisibility = new Event();
-    m_eventToggleChunkVisibility    = new Event();
-    m_event_sprint      = new Event();
+    m_eventLEFT         = new KeyEvent();
+    m_eventRIGHT        = new KeyEvent();
+    m_event_EAT         = new KeyEvent();
+    m_eventToggleStats  = new KeyEvent();
+    m_eventToggleColliderVisibility = new KeyEvent();
+    m_eventToggleChunkVisibility    = new KeyEvent();
+    m_event_sprint      = new KeyEvent();
 
     m_propertyText      = new TextPainter();
 
@@ -113,6 +115,7 @@ void Sheep::setup()
                   KEYBOARD_KEY_S, KEYBOARD_KEY_D,  KEYBOARD_KEY_SHIFT,
                   KEYBOARD_KEY_E, KEYBOARD_KEY_Q,
                   KEYBOARD_KEY_C, KEYBOARD_KEY_M);
+    m_mouseButtonEvent->setButton(sf::Mouse::Button::Left);
 
     //m_sensor->setOwner(this);
     m_sensor->setRect(RectF(-4,-19,8,8));
@@ -145,11 +148,14 @@ void Sheep::setup()
     GameObject::addEvent(m_eventToggleColliderVisibility);
     GameObject::addEvent(m_eventToggleChunkVisibility);
     GameObject::addEvent(m_event_sprint);
+    GameObject::addEvent(m_mouseMoveEvent);
+    GameObject::addEvent(m_mouseButtonEvent);
    // m_tree->insert(this);
 
 }
-void Sheep::checkEvent()
+void Sheep::checkEvent(float deltaTime)
 {
+    //this->setPos(m_mouseMoveEvent->getPos());
     if(Vector::length(m_controller->getMovingVector()) > 0)
     {
         //qDebug() << "Moving";
@@ -291,7 +297,7 @@ void Sheep::postTick()
     if(m_propertyText->isVisible())
         m_propertyText->setPos(Vector2f(m_pos) + m_propertyTextRelativePos);
 
-    GameObject::display_setCameraPos(m_pos);
+    //GameObject::display_setCameraPos(m_pos);
    // m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_movingVector)*1+0.2);
    // GameObject::display_setCameraZoom(m_cameraZoom);
 }
@@ -340,8 +346,8 @@ void Sheep::setTexturePathList(const vector<string> &pathList)
     {
         m_texture->setFilePath(pathList[0]);
         m_texture->loadTexture();
-        m_texturePainter->setOriginType(SpritePainter::Origin::middle);
-        //m_texture->setOriginType(Texture::Origin::middle);
+        m_texturePainter->setOriginType(SpritePainter::Origin::center);
+        //m_texture->setOriginType(Texture::Origin::center);
     }
 
     GameObject::setTextureOnPainter();
@@ -385,11 +391,6 @@ void Sheep::event_hasCollision(vector<GameObject *> other)
             GameObject::event_hasCollision(other);
     }
 
-}
-void Sheep::rotate(const float &deg)
-{
-    GameObject::rotate(deg);
-   // m_sensor->setRotation(GameObject::getRotation());
 }
 void Sheep::setupProperty()
 {

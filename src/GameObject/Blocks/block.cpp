@@ -79,22 +79,6 @@ void Block::move(const Vector2i&vec,Controller::MovingMode mode)
 {
     GameObject::move(vec,mode);
 }*/
-void Block::move(const Vector2f &vec,Controller::MovingMode mode)
-{
-    GameObject::move(vec,mode);
-}
-void Block::move(const float &deltaX, const float &deltaY,Controller::MovingMode mode)
-{
-    GameObject::move(deltaX,deltaY,mode);
-}
-void Block::moveX(const float &delta,Controller::MovingMode mode)
-{
-    GameObject::moveX(delta,mode);
-}
-void Block::moveY(const float &delta,Controller::MovingMode mode)
-{
-    GameObject::moveY(delta,mode);
-}
 /*Vector2f Block::getPos() const
 {
     return GameObject::getPos();
