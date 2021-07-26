@@ -126,7 +126,8 @@ void Block::setup_collider()
 {
   //  GameObject::addHitbox(RectI(m_size.getX(),m_size.getY()));
     RectI boundingBox = RectI::getFrame(m_texture->getRects());
-    m_collider->addHitbox(boundingBox);
+    m_collider->setShape(Shape::rect(boundingBox.getSize().x,boundingBox.getSize().y,Vector2f(boundingBox.getPos())));
+   // m_collider->addHitbox(boundingBox);
 }
 void Block::loadTextures()
 {

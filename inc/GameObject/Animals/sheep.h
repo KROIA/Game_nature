@@ -1,7 +1,7 @@
 #ifndef SHEEP_H
 #define SHEEP_H
 #include "gameobject.h"
-#include "rectSensor.h"
+#include "shapeSensor.h"
 #include "laserSensor.h"
 #include "keyController.h"
 #include "animatedTexture.h"
@@ -29,7 +29,7 @@ class Sheep     : public GameObject
         //virtual void tick(const Vector2i&direction);
         virtual void postTick();
         virtual void preDraw();
-        virtual unsigned int checkCollision(const vector<GameObject*> &other);
+        //virtual unsigned int checkCollision(const vector<GameObject*> &other);
         //virtual void draw(PixelDisplay &display);
 
         virtual void setTexturePathList(const vector<string> &pathList);
@@ -57,7 +57,7 @@ class Sheep     : public GameObject
         Collider        *m_collider;
         KeyController   *m_controller;
 
-        RectSensor      *m_sensor;
+        ShapeSensor      *m_sensor;
         LaserSensor     *m_laserSensor;
 
 

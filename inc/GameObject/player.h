@@ -3,7 +3,7 @@
 
 #include "gameobject.h"
 #include "keyController.h"
-#include "rectSensor.h"
+#include "shapeSensor.h"
 #include <QDebug>
 #include "timer.h"
 
@@ -61,7 +61,7 @@ class Player    :   public GameObject
         SpritePainter  *m_painter;
         KeyController *m_controller;
 
-        RectSensor m_sensor;
+        ShapeSensor m_sensor;
         Timer m_sensorDebugTimer;
 };
 #endif

@@ -3,7 +3,7 @@
 Sheep::Sheep()
     :   GameObject()
 {
-    m_tree              = new ObjectTree(RectF(0,0,256,256),1,10,0);
+    m_tree              = new ObjectTree(AABB({0,0},{256,256}),1,10,0);
     m_tree->setAsRoot(true);
 
     m_treePainter       = new VertexPathPainter();
@@ -24,11 +24,12 @@ Sheep::Sheep()
     m_texturePainter->setRenderLayer(RenderLayerIndex::layer_3);
 
     //m_collider->addHitbox(RectF(-80,5,80,30));
-    m_collider->setHitboxFromTexture(m_texture);
+   // m_collider->setHitboxFromTexture(m_texture);
+    m_collider->setShape(Shape::rect(20,40,{10,20,}));
 #endif
 
 
-    m_sensor            = new RectSensor();
+    m_sensor            = new ShapeSensor();
     m_laserSensor       = new LaserSensor();
 
     m_controller        = new KeyController();
@@ -63,7 +64,7 @@ Sheep::Sheep(const Sheep &other)
 
     m_collider->setHitboxFromTexture(m_texture);
 #endif
-    m_sensor            = new RectSensor();
+    m_sensor            = new ShapeSensor();
     m_controller        = new KeyController();
 
     m_eventLEFT         = new KeyEvent();
@@ -118,7 +119,9 @@ void Sheep::setup()
     m_mouseButtonEvent->setButton(sf::Mouse::Button::Left);
 
     //m_sensor->setOwner(this);
-    m_sensor->setRect(RectF(-4,-19,8,8));
+    Shape sens = Shape::rect(8,8);
+    sens.setOrigin({0,-16});
+    m_sensor->setShape(sens);
     m_sensor->setVisibility(true);
     m_sensor->setVisibility_detectedObjects(true);
 
@@ -139,7 +142,7 @@ void Sheep::setup()
 
 
     GameObject::addSensor(m_sensor);
-    GameObject::addSensor(m_laserSensor);
+    //GameObject::addSensor(m_laserSensor);
 
     GameObject::addEvent(m_eventLEFT);
     GameObject::addEvent(m_eventRIGHT);
@@ -309,12 +312,12 @@ void Sheep::preDraw()
     //m_treePainter->addPath(list);
     //qDebug() << "delta T:"<<GameObject::getEngine_deltaTime();
 }
-unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
+/*unsigned int Sheep::checkCollision(const vector<GameObject*> &other)
 {
     unsigned int collisionAmount = GameObject::checkCollision(other);
    // m_sensor->detectObjects(other);
     return collisionAmount;
-}
+}*/
 /*void Sheep::draw(PixelDisplay &display)
 {
     if(m_slowTimer.start(0.5))

@@ -29,7 +29,8 @@ Player::Player()
     this->setProperty(property);
 
     //m_sensor.setOwner(this);
-    m_sensor.setRect(RectF(-5,-10,10,5));
+   // m_sensor.setRect(Shape::rect(-5,-10,10,5));
+    m_sensor.setShape(Shape::rect(10,5,{-5,-10}));
 
 
     //buildPlayer();

@@ -13,16 +13,16 @@ unsigned int         Level::m_mapWidth;
 //ManagedGameObjectGroup      Level::m_objectList;
 
 // Toggle stats on and off
-KeyEvent               *Level::m_keyEvent_P;
+KeyEvent            *Level::m_keyEvent_P;
 
 // Toggle Hitbox of all objects in the list: hitboxObjectList
-KeyEvent               *Level::m_keyEvent_H;
+KeyEvent            *Level::m_keyEvent_H;
 GameObjectGroup     *Level::m_terainGroup;
 GameObjectGroup     *Level::m_hitboxObjectList;
 bool                 Level::m_visibility_collider_hitbox;
 Timer                Level::m_timer1;
 Sheep               *Level::m_sheep;
-Vector2i               Level::m_windowMidlePoint;
+Vector2i             Level::m_windowMidlePoint;
 
 GameObjectGroup     *Level::m_grassList;
 unsigned int         Level::m_maxGrassAmount;
@@ -48,7 +48,7 @@ Level::Level(Vector2u  windowSize, unsigned int mapWidth)
     settings.display.windowSize = m_windowSize;
     settings.display.pixelMapSize = Vector2u (m_mapWidth,float(m_mapWidth)*float(m_windowSize.y)/float(m_windowSize.x));
     settings.gameObject.objectTree.maxObjects = 128;
-    settings.gameObject.objectTree.boundry = RectF(-1,-1,256,256);
+    settings.gameObject.objectTree.boundry = AABB({-1,-1},{256,256});
   //  settings.gameObject.objectTree.boundry = RectF(-32,-32,256,256);
     //settings.gameObject.chunkMap.chunk.size = Vector2u(128,128);
     //settings.gameObject.chunkMap.chunkMapSize = settings.gameObject.chunkMap.chunk.size * 16u;
@@ -163,7 +163,7 @@ void Level::setup_level()
 
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPos(Vector2f(0,0));
+    m_sheep->setPos(Vector2f(150,50));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -182,7 +182,7 @@ void Level::setup_level()
     m_hitboxObjectList = new GameObjectGroup();
     m_windowMidlePoint= Vector2i(m_engine->getMapSize().x/2,m_engine->getMapSize().y/2);
     m_sheep = new Sheep();
-    m_sheep->setPosInital(Vector2f(150,50));
+    m_sheep->setPosInitial(Vector2f(150,50));
 #ifdef GLOBALVIEW
     m_sheep->setPos(m_windowMidlePoint);
 #endif
@@ -190,21 +190,23 @@ void Level::setup_level()
     GameObject *obsticle = new GameObject();
     TexturePainter *obsticleTexturePainter = new TexturePainter();
     Texture *obsticleTexture = new Texture();
-    obsticleTexture->setOriginType(Origin::topLeft);
+    obsticleTexture->setOriginType(Origin::center);
     obsticleTexture->loadTexture(TexturePath::Block::stone);
     //obsticleTexturePainter->setOriginType(Origin::topLeft);
     obsticleTexturePainter->setTexture(obsticleTexture);
 
     Collider *obsticleCollider = new Collider();
-    obsticleCollider->addHitbox(RectI(0,0,16,16));
+    Shape hitB = Shape::rect(16,16);
+    hitB.setStatic(false);
+    obsticleCollider->setShape(hitB);
     obsticleCollider->updateBoundingBox();
     obsticle->setCollider(obsticleCollider);
-    obsticle->setPainter(obsticleTexturePainter);
-    obsticle->setPosInital(Vector2f(50,50));
+    obsticle->addPainter(obsticleTexturePainter);
+    obsticle->setPosInitial(Vector2f(50,50));
     Property::Property p;
     p.setBody_material(Property::Material::Stone);
     obsticle->setProperty(p);
-    obsticle->setVisibility_collider_hitbox(true);
+    obsticle->getColliderPainter()->setVisibility_hitBox(true);
 
 #endif
 
@@ -244,7 +246,7 @@ void Level::setup_level()
 #ifndef CLEAR_LEVEL
   //  m_engine->setCollisionSingleInteraction(m_sheep,m_terainGroup);
     qDebug() << "set interactions";
-    m_engine->setCollisionSingleInteraction(m_sheep,m_grassList);
+    m_engine->setCollisionSingleInteraction(Interaction::detection,m_sheep,m_grassList);
     //m_engine->setRenderLayer_BOTTOM(m_terainGroup);
     //m_engine->setRenderLayer_BOTTOM(m_terainGroup);
   //  m_engine->moveRenderLayer_UP(m_grassList);
@@ -252,7 +254,7 @@ void Level::setup_level()
 
    // m_engine->setLayerVisibility(RenderLayerIndex::vertexPaths,false);
 #else
-    m_engine->setCollisionSingleInteraction(m_sheep,obsticle);
+    m_engine->setCollisionSingleInteraction(Interaction::collision,m_sheep,obsticle);
     //m_engine->setRenderLayer_TOP(m_sheep);
 
 #endif
@@ -338,16 +340,17 @@ void Level::userEventLoop(float tickInterval,unsigned long long tick,const vecto
  // userTickLoop: Here you can manipulate the game.
 void Level::userTickLoop(float tickInterval,unsigned long long tick)
 {
-    RectI generatorRect;
-    Vector2i rectSize(16*64,16*64);
-    generatorRect.setPos(Vector2i(m_sheep->getPos().x-rectSize.x/2,m_sheep->getPos().y-rectSize.y/2));
-    generatorRect.setSize(rectSize);
-    terainGenerator(m_engine,generatorRect);
+
     /*if(m_chunkGenTimer.start(0.1))
     {
         chunkLoader();
     }*/
 #ifndef CLEAR_LEVEL
+    RectI generatorRect;
+    Vector2i rectSize(16*64,16*64);
+    generatorRect.setPos(Vector2i(m_sheep->getPos().x-rectSize.x/2,m_sheep->getPos().y-rectSize.y/2));
+    generatorRect.setSize(rectSize);
+    terainGenerator(m_engine,generatorRect);
 #ifdef GLOBALVIEW
     Vector2f movingVec = Vector2f(m_windowMidlePoint) - Vector2f(m_sheep->getPos());
     if(Vector::length(movingVec) > 0)

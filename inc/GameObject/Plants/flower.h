@@ -26,7 +26,8 @@ class Flower     : public GameObject
             m_collider          = new Collider();
 
             RectI boundingBox = RectI::getFrame(m_textureList[variation]->getRects());
-            m_collider->addHitbox(boundingBox);
+            //m_collider->addHitbox(boundingBox);
+            m_collider->setShape(Shape::rect(boundingBox.getSize().x,boundingBox.getSize().y,Vector2f(boundingBox.getPos())));
 
             Property::Type type;
             Property::Body body;
