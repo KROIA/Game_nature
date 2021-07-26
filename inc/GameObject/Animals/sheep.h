@@ -11,6 +11,7 @@
 #include "textPainter.h"
 #include "mouseMoveEvent.h"
 #include "mouseButtonEvent.h"
+#include "mouseMoveController.h"
 
 #include "objectTree.h"
 //#define USE_ANIMATED_TEXTURE
@@ -56,6 +57,7 @@ class Sheep     : public GameObject
         TexturePainter  *m_texturePainter;
         Collider        *m_collider;
         KeyController   *m_controller;
+        MouseMoveController *m_mouseMoveController;
 
         ShapeSensor      *m_sensor;
         LaserSensor     *m_laserSensor;

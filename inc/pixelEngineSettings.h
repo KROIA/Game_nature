@@ -3,7 +3,7 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 // Timing
-#define PIXELENGINE_NO_TIMED_LOOPS
+//#define PIXELENGINE_NO_TIMED_LOOPS
 
 // Performance
 #define PIXELENGINE_USE_THREADS

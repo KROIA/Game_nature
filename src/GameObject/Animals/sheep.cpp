@@ -33,6 +33,8 @@ Sheep::Sheep()
     m_laserSensor       = new LaserSensor();
 
     m_controller        = new KeyController();
+    m_mouseMoveController   = new MouseMoveController();
+    m_controller->setActive(false);
 
     m_eventLEFT         = new KeyEvent();
     m_eventRIGHT        = new KeyEvent();
@@ -133,11 +135,14 @@ void Sheep::setup()
     m_cameraZoom = 0.2;
 
     m_controller->setStepSize(100);
+    m_mouseMoveController->setStepSize(1);
+    //m_mouseMoveController->setClipToCoursor(true);
 
     GameObject::addPainter(m_texturePainter);
     GameObject::addPainter(m_propertyText);
     //GameObject::addPainter(m_treePainter);
-    GameObject::addController(m_controller);
+    //GameObject::addController(m_controller);
+    GameObject::addController(m_mouseMoveController);
     GameObject::setCollider(m_collider);
 
 
@@ -159,15 +164,16 @@ void Sheep::setup()
 void Sheep::checkEvent(float deltaTime)
 {
     //this->setPos(m_mouseMoveEvent->getPos());
-    if(Vector::length(m_controller->getMovingVector()) > 0)
+    if(Vector::length(GameObject::getMovingVector()) > 0)
     {
         //qDebug() << "Moving";
+        float length = Vector::length(GameObject::getMovingVector());
         if(m_property.getBody().stamina > 0)
-            m_property.setBody_stamina(m_property.getBody().stamina - 1);
+            m_property.setBody_stamina(m_property.getBody().stamina - 0.1*length);
 
         if(m_property.getBody().stamina < 10)
         {
-            m_property.setBody_health(m_property.getBody().health - 2);
+            m_property.setBody_health(m_property.getBody().health - 0.1*length);
 
         }
        /* if(m_property.getBody().health <= 0)
@@ -242,6 +248,7 @@ void Sheep::checkEvent(float deltaTime)
                     if(p.getFood().foodAmount < 0.01)
                         detectedObjList[i]->removeMeFromEngine();
 
+                    qDebug()<<p.getFood().foodAmount;
                     //qDebug() << sheepProperty.toString().c_str();
                     //qDebug() << p.toString().c_str();
                 }
@@ -300,7 +307,7 @@ void Sheep::postTick()
     if(m_propertyText->isVisible())
         m_propertyText->setPos(Vector2f(m_pos) + m_propertyTextRelativePos);
 
-    //GameObject::display_setCameraPos(m_pos);
+    GameObject::display_setCameraPos(m_pos);
    // m_cameraZoom = (0.98*m_cameraZoom) + 0.02 * (Vector::length(m_movingVector)*1+0.2);
    // GameObject::display_setCameraZoom(m_cameraZoom);
 }
