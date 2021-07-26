@@ -1,6 +1,6 @@
 #include "level.h"
 //#define GLOBALVIEW
-#define CLEAR_LEVEL
+//#define CLEAR_LEVEL
 
 // Engine object
 PixelEngine         *Level::m_engine;
@@ -355,7 +355,6 @@ void Level::userTickLoop(float tickInterval,unsigned long long tick)
     {
         chunkLoader();
     }*/
-#ifndef CLEAR_LEVEL
 #ifdef GLOBALVIEW
     Vector2f movingVec = Vector2f(m_windowMidlePoint) - Vector2f(m_sheep->getPos());
     if(Vector::length(movingVec) > 0)

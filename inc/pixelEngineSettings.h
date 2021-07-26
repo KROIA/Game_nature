@@ -28,7 +28,7 @@
 
    #define GAME_OBJECT_PROFILER
   // #define PAINTER_PROFILER
-   #define SUBMODULE_PROFILER
+  // #define SUBMODULE_PROFILER
   // #define SENSOR_PROFILER
   // #define TEXTURE_PROFILER
   // #define COLLIDER_PROFILER
@@ -36,7 +36,7 @@
   // #define EVENT_PROFILER
   // #define TIMER_PROFILER
 
-  //  #define THREAD_PROFILER
+    #define THREAD_PROFILER
     #define ENGINE_PROFILER
     #define ENGINE_DEEP_TICK_PROFILER
   //  #define DISPLAY_PROFILER

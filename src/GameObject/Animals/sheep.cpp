@@ -128,8 +128,8 @@ void Sheep::setup()
     m_sensor->setVisibility_detectedObjects(true);
 
     m_laserSensor->addLaser(Vector2f(0, -16),25,-90);
-    m_laserSensor->addLaser(Vector2f(-1,-16),20,-135);
-    m_laserSensor->addLaser(Vector2f(1, -16),20,-45);
+    //m_laserSensor->addLaser(Vector2f(-1,-16),20,-135);
+    //m_laserSensor->addLaser(Vector2f(1, -16),20,-45);
 
     setupProperty();
     m_cameraZoom = 0.2;
@@ -147,7 +147,7 @@ void Sheep::setup()
 
 
     GameObject::addSensor(m_sensor);
-    //GameObject::addSensor(m_laserSensor);
+    GameObject::addSensor(m_laserSensor);
 
     GameObject::addEvent(m_eventLEFT);
     GameObject::addEvent(m_eventRIGHT);
